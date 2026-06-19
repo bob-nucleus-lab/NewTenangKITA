@@ -1,4 +1,4 @@
-# NewTenangKITA v0.1 — Release Notes
+# NewTenangKITA v0.1.1 — Release Notes
 
 ## Implemented
 
@@ -13,6 +13,18 @@
 - Consent withdrawal and local prototype-data deletion
 - Larger-text option, keyboard focus styles, semantic navigation and minimum touch targets
 - Installable PWA manifest and offline asset cache
+
+## v0.1.1 enhancements
+
+- Guest mode no longer assumes a concern, state or household size
+- Optional context fields now default to “Tidak mahu nyatakan”
+- Recommendations respond to connected-source status
+- Urgent-help path bypasses identity and benefit login
+- Visible Back controls and browser-history support
+- MyDigital ID mock supports success, cancellation and unavailable outcomes
+- Verification and consent are session-scoped, expire after 15 minutes and support logout
+- Public benefit cards link directly to official sources
+- Screen focus moves to the new main content after navigation
 
 ## Not implemented
 

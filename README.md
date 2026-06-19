@@ -1,4 +1,4 @@
-# NewTenangKITA v0.1
+# NewTenangKITA v0.1.1
 
 Clean BM-first citizen prototype implementing:
 
@@ -11,6 +11,11 @@ Clean BM-first citizen prototype implementing:
 - Official-source links and freshness labels
 - Privacy controls and local data reset
 - Installable/offline-capable PWA shell
+- Neutral guest mode without assumed location or household data
+- Urgent-help route without authentication
+- Browser Back/history support
+- MyDigital ID success, cancellation and unavailable mock outcomes
+- Session-scoped verification with logout and automatic expiry
 
 ## Run locally
 
