@@ -1,4 +1,15 @@
-# NewTenangKITA v0.1.1 — Release Notes
+# NewTenangKITA v0.2 — Release Notes
+
+## v0.2 enhancements
+
+- Six citizen needs: sara hidup, pengangkutan, kesihatan, pendidikan, perumahan, and kerja & pendapatan
+- Demo-only basic-price cards with a persistent truth label and official PriceCatcher handoff
+- Official Jualan Rahmah handoff without invented schedules or distances
+- On-device travel-cost calculator; inputs are not stored
+- Broader public benefit catalog with official links and no eligibility determination
+- Concern-aware relevance labels that never imply qualification
+- Amanah Data screen describing every module as official link, demo, estimate, or not connected
+- Updated prototype boundary labels across the experience
 
 ## Implemented
 
@@ -14,7 +25,7 @@
 - Larger-text option, keyboard focus styles, semantic navigation and minimum touch targets
 - Installable PWA manifest and offline asset cache
 
-## v0.1.1 enhancements
+## v0.1.1 foundation
 
 - Guest mode no longer assumes a concern, state or household size
 - Optional context fields now default to “Tidak mahu nyatakan”
@@ -33,6 +44,7 @@
 - Real eligibility, balances, usage or transactions
 - Submission, payment, appeal or record-changing functions
 - Live prices, Jualan Rahmah schedules or emergency alerts
+- Full multilingual content and production analytics
 
 ## Required before a verified pilot
 

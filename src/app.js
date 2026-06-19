@@ -1,13 +1,14 @@
 (() => {
   'use strict';
 
-  const LOCAL_KEY = 'newtk-v011-preferences';
-  const SESSION_KEY = 'newtk-v011-session';
+  const LOCAL_KEY = 'newtk-v02-preferences';
+  const SESSION_KEY = 'newtk-v02-session';
   const SESSION_MS = 15 * 60 * 1000;
   const defaults = {
     route: 'welcome',
     tab: 'home',
     concern: null,
+    activeNeed: 'living',
     state: '',
     household: '',
     largeText: false,
@@ -64,11 +65,37 @@
     }
   };
 
+  const needsData = {
+    living: { icon: '◫', label: 'Sara hidup', desc: 'Harga asas, jualan berhemah dan bantuan tunai.', link: 'https://www.malaysia.gov.my/categories/bantuan-kebajikan--kemudahan/bantuan-kewangan' },
+    transport: { icon: '◎', label: 'Pengangkutan', desc: 'Anggar kos perjalanan dan semak bantuan bahan api.', link: 'https://www.budi95.gov.my/' },
+    health: { icon: '+', label: 'Kesihatan', desc: 'Cari saluran kesihatan dan sokongan berkaitan.', link: 'https://www.malaysia.gov.my/categories/kesihatan' },
+    education: { icon: '☆', label: 'Pendidikan', desc: 'Bantuan persekolahan, pengajian dan latihan.', link: 'https://www.malaysia.gov.my/my/categories/bantuan-kebajikan--kemudahan/bantuan-pendidikan' },
+    housing: { icon: '⌂', label: 'Perumahan', desc: 'Program rumah dan sokongan tempat tinggal.', link: 'https://www.malaysia.gov.my/my/categories/bantuan-kebajikan--kemudahan/bantuan-perumahan' },
+    work: { icon: '◇', label: 'Kerja & pendapatan', desc: 'Pekerjaan, latihan dan perlindungan pendapatan.', link: 'https://www.malaysia.gov.my/categories/bantuan-kebajikan--kemudahan/bantuan-pekerjaan' }
+  };
+
+  const priceSamples = [
+    ['Beras putih tempatan', 'RM13.00', '5 kg'],
+    ['Telur ayam', 'RM4.80', '10 biji'],
+    ['Minyak masak', 'RM6.90', '1 kg']
+  ];
+
+  const benefitCatalog = [
+    { name: 'Sumbangan Asas Rahmah (SARA)', need: 'living', summary: 'Kredit barangan asas untuk penerima yang disahkan melalui saluran rasmi.', url: 'https://sara.gov.my/' },
+    { name: 'Sumbangan Tunai Rahmah (STR)', need: 'living', summary: 'Semakan permohonan dan bayaran bantuan tunai melalui HASiL.', url: 'https://bantuantunai.hasil.gov.my/' },
+    { name: 'BUDI95', need: 'transport', summary: 'Maklumat rasmi berkaitan subsidi dan penggunaan bahan api.', url: 'https://www.budi95.gov.my/' },
+    { name: 'Bantuan pendidikan', need: 'education', summary: 'Pintu masuk rasmi untuk program pendidikan yang mungkin berkaitan.', url: needsData.education.link },
+    { name: 'Bantuan perumahan', need: 'housing', summary: 'Pintu masuk rasmi untuk program rumah dan tempat tinggal.', url: needsData.housing.link },
+    { name: 'Bantuan pekerjaan', need: 'work', summary: 'Program pekerjaan, latihan dan perlindungan pendapatan.', url: needsData.work.link },
+    { name: 'Perkhidmatan kesihatan', need: 'health', summary: 'Maklumat perkhidmatan dan saluran kesihatan kerajaan.', url: needsData.health.link }
+  ];
+
   function persist() {
     localStorage.setItem(LOCAL_KEY, JSON.stringify({
       route: state.route,
       tab: state.tab,
       concern: state.concern,
+      activeNeed: state.activeNeed,
       state: state.state,
       household: state.household,
       largeText: state.largeText
@@ -86,7 +113,7 @@
   }
 
   function phase() {
-    return `<div class="phase"><b>PROTOTAIP v0.1.1</b> Baki dan status selepas pengesahan ialah simulasi. <a href="#" data-action="about-demo">Ketahui batas prototaip</a></div>`;
+    return `<div class="phase"><b>PROTOTAIP v0.2</b> Nilai demo dan anggaran bukan rekod rasmi. <a href="#" data-action="about-demo">Ketahui batas prototaip</a></div>`;
   }
 
   function top() {
@@ -161,9 +188,15 @@
 
   function benefits() {
     if (!state.verified) {
-      return `<section class="card hero"><p class="eyebrow">Bantuan peribadi</p><h1>Lihat maklumat anda dengan selamat.</h1><p>Log masuk hanya diperlukan untuk melihat status, baki atau penggunaan yang berkaitan dengan diri anda.</p><div class="privacy"><b>TenangKITA tidak meminta kata laluan MyDigital ID.</b><br>Pengesahan berlaku dalam aplikasi MyDigital ID.</div><button class="button full" data-route="auth-intro">Log masuk dengan MyDigital ID</button><a class="button-secondary full official-jump" href="#official-list">Lihat pilihan semakan rasmi</a></section>${publicBenefits()}`;
+      return `<section class="card hero"><p class="eyebrow">Bantuan peribadi</p><h1>Lihat maklumat anda dengan selamat.</h1><p>Log masuk hanya diperlukan untuk melihat status, baki atau penggunaan yang berkaitan dengan diri anda.</p><div class="privacy"><b>TenangKITA tidak meminta kata laluan MyDigital ID.</b><br>Pengesahan berlaku dalam aplikasi MyDigital ID.</div><button class="button full" data-route="auth-intro">Log masuk dengan MyDigital ID</button><a class="button-secondary full official-jump" href="#official-list">Lihat pilihan semakan rasmi</a></section>${benefitDiscovery()}${publicBenefits()}`;
     }
-    return `<div class="demo-banner">PENGESAHAN & DATA DEMO — Bukan identiti, baki, transaksi atau keputusan sebenar.</div><section class="card"><h1>Bantuan saya</h1><p>Hanya sumber yang anda izinkan dipaparkan. Sesi simulasi tamat selepas 15 minit.</p>${Object.keys(sources).map(benefitCard).join('')}</section>`;
+    return `<div class="demo-banner">PENGESAHAN & DATA DEMO — Bukan identiti, baki, transaksi atau keputusan sebenar.</div><section class="card"><h1>Bantuan saya</h1><p>Hanya sumber yang anda izinkan dipaparkan. Sesi simulasi tamat selepas 15 minit.</p>${Object.keys(sources).map(benefitCard).join('')}</section>${benefitDiscovery()}`;
+  }
+
+  function benefitDiscovery() {
+    const mapped = { groceries: 'living', fuel: 'transport', bills: 'housing', children: 'education', income: 'work' }[state.concern];
+    const ordered = [...benefitCatalog].sort(item => item.need === mapped ? -1 : 0);
+    return `<section class="card"><p class="eyebrow">Teroka tanpa log masuk</p><h2>Bantuan yang mungkin berkaitan</h2><p>Senarai ini membantu anda mencari saluran. Ia bukan keputusan kelayakan.</p><div class="catalog">${ordered.map(item => `<article class="catalog-item"><div><span class="tag official">Semak rasmi</span>${item.need === mapped ? '<span class="tag relevant">Berkaitan keutamaan anda</span>' : ''}<h3>${item.name}</h3><p>${item.summary}</p></div><a class="button-secondary" href="${item.url}" target="_blank" rel="noopener noreferrer">Buka portal rasmi</a></article>`).join('')}</div></section>`;
   }
 
   function publicBenefits() {
@@ -182,7 +215,29 @@
   }
 
   function needs() {
-    return `<section class="card"><h1>Keperluan harian</h1><p>Maklumat awam dan alat mudah yang tidak memerlukan identiti anda.</p><div class="choice-grid"><article class="choice"><span aria-hidden="true">▣</span><span><b>Harga barang asas</b><small>Lapisan data harga memerlukan sumber langsung dan masa kemas kini.</small></span></article><article class="choice"><span aria-hidden="true">◎</span><span><b>Jualan Rahmah</b><small>Jadual mengikut lokasi akan dipaparkan selepas integrasi rasmi.</small></span></article><article class="choice"><span aria-hidden="true">◇</span><span><b>Kalkulator perjalanan</b><small>Anggaran sahaja; tiada data perjalanan disimpan dalam v0.1.1.</small></span></article></div></section>${humanSupport()}`;
+    return `<section class="card"><h1>Keperluan harian</h1><p>Pilih perkara yang mahu diringkaskan. Tiada identiti diperlukan.</p><div class="need-grid">${Object.entries(needsData).map(([id, item]) => `<button class="need-button ${state.activeNeed === id ? 'selected' : ''}" data-need="${id}" aria-pressed="${state.activeNeed === id}"><span aria-hidden="true">${item.icon}</span><b>${item.label}</b></button>`).join('')}</div></section>${needDetail()}`;
+  }
+
+  function needDetail() {
+    if (state.activeNeed === 'living') return livingCostModule();
+    if (state.activeNeed === 'transport') return travelModule();
+    const item = needsData[state.activeNeed];
+    const actions = {
+      health: ['Kenal pasti bantuan yang diperlukan', 'Sediakan dokumen rawatan atau surat rujukan jika ada.'],
+      education: ['Fokus satu keperluan dahulu', 'Semak tarikh permohonan dan dokumen sekolah atau institusi.'],
+      housing: ['Semak program mengikut negeri', 'Syarat rumah dan tempat tinggal boleh berbeza mengikut lokasi.'],
+      work: ['Pilih satu laluan hari ini', 'Semak peluang kerja, latihan atau perlindungan pendapatan.']
+    }[state.activeNeed];
+    return `<section class="card"><p class="eyebrow">${item.label}</p><h2>Apa yang boleh dibuat sekarang?</h2><div class="action-list"><article class="action"><span class="action-icon">1</span><div><b>${actions[0]}</b><small>${actions[1]}</small></div></article><article class="action"><span class="action-icon">2</span><div><b>Semak maklumat rasmi</b><small>Portal rasmi menentukan syarat, tarikh dan keputusan sebenar.</small></div></article></div><a class="button full" href="${item.link}" target="_blank" rel="noopener noreferrer">Teroka portal rasmi</a><div class="truth-note"><b>Status data: portal rasmi</b><span>TenangKITA tidak menentukan kelayakan.</span></div></section>${humanSupport()}`;
+  }
+
+  function livingCostModule() {
+    const place = state.state || 'lokasi anda';
+    return `<section class="card"><p class="eyebrow">Sara hidup</p><h2>Contoh perbandingan harga</h2><div class="demo-banner">DATA DEMO — bukan harga semasa. Gunakan PriceCatcher untuk semakan sebenar.</div><p>Contoh paparan bagi ${place}. Harga sebenar berbeza mengikut premis, lokasi dan masa.</p><div class="price-grid">${priceSamples.map(item => `<article class="price-card"><span>${item[0]}</span><strong>${item[1]}</strong><small>per ${item[2]} · demo</small></article>`).join('')}</div><a class="button full" href="https://pricecatcher.kpdn.gov.my/" target="_blank" rel="noopener noreferrer">Semak harga sebenar</a></section><section class="card"><p class="eyebrow">Jualan Rahmah</p><h2>Cari jualan berhampiran</h2><p>Jadual tidak disalin ke prototaip kerana ia boleh berubah. Semak lokasi dan masa terus melalui saluran KPDN.</p><a class="button full" href="https://pjrm.kpdn.gov.my/" target="_blank" rel="noopener noreferrer">Buka jadual rasmi</a><div class="truth-note"><b>Status data: belum disambungkan</b><span>Tiada acara atau jarak rekaan dipaparkan.</span></div></section>`;
+  }
+
+  function travelModule() {
+    return `<section class="card"><p class="eyebrow">Pengangkutan</p><h2>Anggar kos perjalanan bulanan</h2><p>Masukkan anggaran sendiri. Nilai ini dikira pada peranti dan tidak disimpan.</p><label class="field">Jarak sebulan (km)<input id="trip-km" type="number" min="0" step="10" inputmode="decimal" placeholder="Contoh: 600"></label><label class="field">Penggunaan bahan api (L/100 km)<input id="trip-eff" type="number" min="0" step="0.1" inputmode="decimal" placeholder="Contoh: 7.0"></label><label class="field">Harga bahan api (RM/L)<input id="trip-price" type="number" min="0" step="0.01" inputmode="decimal" placeholder="Masukkan harga yang anda bayar"></label><label class="field">Tol & parkir sebulan (RM)<input id="trip-extra" type="number" min="0" step="1" inputmode="decimal" placeholder="Jika ada"></label><button class="button full" data-action="calculate-trip">Kira anggaran</button><div id="trip-result" class="result-box" aria-live="polite"><small>Anggaran akan dipaparkan di sini.</small></div><div class="truth-note"><b>Status data: anggaran TenangKITA</b><span>Bukan rekod transaksi, tuntutan atau penggunaan subsidi.</span></div><a class="button-secondary full" href="https://www.budi95.gov.my/" target="_blank" rel="noopener noreferrer">Semak BUDI95 secara rasmi</a></section>`;
   }
 
   function humanSupport() {
@@ -194,7 +249,18 @@
   }
 
   function me() {
-    return `<section class="card"><h1>Saya & privasi</h1><div class="setting-row"><div><b>Saiz teks lebih besar</b><small>Mudahkan pembacaan pada peranti kecil.</small></div><button class="button-secondary" data-action="toggle-text">${state.largeText ? 'Tutup' : 'Aktifkan'}</button></div><div class="setting-row"><div><b>Keutamaan utama</b><small>${state.concern ? concerns[state.concern].label : 'Belum dipilih'}</small></div><button class="text-button" data-route="concern">Tukar</button></div><div class="setting-row"><div><b>Status identiti</b><small>${state.verified ? 'Pengesahan simulasi aktif' : 'Belum disahkan'}</small></div><span class="tag ${state.verified ? 'connected' : ''}">${state.verified ? 'Demo aktif' : 'Tetamu'}</span></div>${state.verified ? `<button class="button-secondary full" data-action="logout">Keluar daripada sesi demo</button>` : ''}</section><section class="card"><h2>Pusat izin</h2>${Object.entries(sources).map(([id, source]) => `<div class="setting-row"><div><b>${source.name}</b><small>${state.consents.includes(id) ? 'Izin baca sahaja aktif' : 'Tidak disambungkan'}</small></div>${state.consents.includes(id) ? `<button class="text-button" data-disconnect="${id}">Tarik balik</button>` : '<span class="tag">Tiada akses</span>'}</div>`).join('')}</section><section class="card"><h2>Kawalan data</h2><p>Pilihan umum disimpan pada peranti; pengesahan dan izin hanya disimpan untuk sesi semasa.</p><button class="button-secondary danger-button full" data-action="reset">Padam semua data prototaip</button></section>`;
+    return `<section class="card"><h1>Saya & privasi</h1><div class="setting-row"><div><b>Saiz teks lebih besar</b><small>Mudahkan pembacaan pada peranti kecil.</small></div><button class="button-secondary" data-action="toggle-text">${state.largeText ? 'Tutup' : 'Aktifkan'}</button></div><div class="setting-row"><div><b>Keutamaan utama</b><small>${state.concern ? concerns[state.concern].label : 'Belum dipilih'}</small></div><button class="text-button" data-route="concern">Tukar</button></div><div class="setting-row"><div><b>Status identiti</b><small>${state.verified ? 'Pengesahan simulasi aktif' : 'Belum disahkan'}</small></div><span class="tag ${state.verified ? 'connected' : ''}">${state.verified ? 'Demo aktif' : 'Tetamu'}</span></div>${state.verified ? `<button class="button-secondary full" data-action="logout">Keluar daripada sesi demo</button>` : ''}</section><section class="card"><h2>Amanah data</h2><p>Lihat dari mana maklumat datang, cara ia digunakan dan batasnya.</p><button class="button-secondary full" data-route="data-trust">Lihat sumber & kaedah</button></section><section class="card"><h2>Pusat izin</h2>${Object.entries(sources).map(([id, source]) => `<div class="setting-row"><div><b>${source.name}</b><small>${state.consents.includes(id) ? 'Izin baca sahaja aktif' : 'Tidak disambungkan'}</small></div>${state.consents.includes(id) ? `<button class="text-button" data-disconnect="${id}">Tarik balik</button>` : '<span class="tag">Tiada akses</span>'}</div>`).join('')}</section><section class="card"><h2>Kawalan data</h2><p>Pilihan umum disimpan pada peranti; pengesahan dan izin hanya disimpan untuk sesi semasa.</p><button class="button-secondary danger-button full" data-action="reset">Padam semua data prototaip</button></section>`;
+  }
+
+  function dataTrust() {
+    const rows = [
+      ['Harga barang', 'Data demo', 'Contoh tetap; bukan sambungan PriceCatcher atau harga semasa.'],
+      ['Jualan Rahmah', 'Belum disambungkan', 'Prototaip membuka jadual rasmi KPDN tanpa menyalin acara.'],
+      ['Kalkulator perjalanan', 'Anggaran tempatan', 'Formula: bahan api + tol/parkir berdasarkan input pengguna. Input tidak disimpan.'],
+      ['SARA, BUDI95 & STR', 'Data demo selepas izin', 'Tiada API sebenar. Baki, status dan penggunaan hanyalah simulasi.'],
+      ['Katalog bantuan', 'Pautan portal rasmi', 'TenangKITA membantu mencari; agensi menentukan syarat dan kelayakan.']
+    ];
+    return shell(`${backBar()}<section class="card"><p class="eyebrow">Amanah data</p><h1>Kenali setiap maklumat.</h1><p>Setiap modul menyatakan sama ada maklumat itu rasmi, demo, anggaran atau belum disambungkan.</p><div class="source-list">${rows.map(row => `<article class="source-card"><div><h3>${row[0]}</h3><span class="tag">${row[1]}</span></div><p>${row[2]}</p></article>`).join('')}</div></section><section class="card"><h2>Prinsip prototaip</h2><ul class="plain-list"><li>Tidak mengisytiharkan kelayakan bantuan.</li><li>Tidak mereka baki, lokasi acara atau harga sebagai data semasa.</li><li>Membuka portal rasmi untuk pengesahan akhir.</li><li>Mengutamakan tindakan mudah tanpa memalukan pengguna.</li></ul></section>`, false);
   }
 
   function authIntro() {
@@ -220,7 +286,7 @@
   }
 
   function about() {
-    alert('NewTenangKITA v0.1.1 ialah prototaip. MyDigital ID dan data manfaat adalah simulasi; tiada kelayakan, baki atau transaksi sebenar diproses.');
+    alert('NewTenangKITA v0.2 ialah prototaip. MyDigital ID dan data manfaat adalah simulasi. Harga ialah contoh demo; kalkulator menghasilkan anggaran tempatan. Tiada kelayakan, baki atau transaksi sebenar diproses.');
   }
 
   function navigate(route, tab = state.tab, replace = false) {
@@ -253,6 +319,7 @@
       'auth-intro': authIntro,
       'auth-progress': authProgress,
       'auth-error': authError,
+      'data-trust': dataTrust,
       consent,
       main
     };
@@ -288,6 +355,12 @@
         if (finish) finish.disabled = false;
       };
     });
+    document.querySelectorAll('[data-need]').forEach(element => {
+      element.onclick = () => {
+        state.activeNeed = element.dataset.need;
+        render();
+      };
+    });
     document.querySelectorAll('[data-action="toggle-text"]').forEach(element => {
       element.onclick = () => { state.largeText = !state.largeText; render(); };
     });
@@ -298,6 +371,7 @@
     if (setup) setup.onclick = () => {
       state.state = document.querySelector('#state-select').value;
       state.household = document.querySelector('#household-select').value;
+      state.activeNeed = { groceries: 'living', fuel: 'transport', bills: 'housing', children: 'education', income: 'work' }[state.concern] || state.activeNeed;
       navigate(state.concern === 'urgent' ? 'urgent' : 'main', 'home');
     };
     const guest = document.querySelector('[data-action="guest"]');
@@ -306,6 +380,21 @@
       state.state = '';
       state.household = '';
       navigate('main', 'home');
+    };
+    const calculator = document.querySelector('[data-action="calculate-trip"]');
+    if (calculator) calculator.onclick = () => {
+      const km = Number(document.querySelector('#trip-km').value);
+      const efficiency = Number(document.querySelector('#trip-eff').value);
+      const price = Number(document.querySelector('#trip-price').value);
+      const extra = Number(document.querySelector('#trip-extra').value || 0);
+      const result = document.querySelector('#trip-result');
+      if (!(km > 0) || !(efficiency > 0) || !(price > 0) || extra < 0) {
+        result.innerHTML = '<b>Sila lengkapkan jarak, penggunaan dan harga dengan nilai yang sah.</b>';
+        return;
+      }
+      const litres = km * efficiency / 100;
+      const fuel = litres * price;
+      result.innerHTML = `<small>Anggaran kos sebulan</small><strong>RM${(fuel + extra).toFixed(2)}</strong><span>Bahan api RM${fuel.toFixed(2)} + tol/parkir RM${extra.toFixed(2)}</span>`;
     };
     document.querySelectorAll('[data-auth-result]').forEach(element => {
       element.onclick = () => {

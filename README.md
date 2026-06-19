@@ -1,4 +1,4 @@
-# NewTenangKITA v0.1.1
+# NewTenangKITA v0.2
 
 Clean BM-first citizen prototype implementing:
 
@@ -16,6 +16,12 @@ Clean BM-first citizen prototype implementing:
 - Browser Back/history support
 - MyDigital ID success, cancellation and unavailable mock outcomes
 - Session-scoped verification with logout and automatic expiry
+- Six plain-language need areas for daily life
+- Clearly labelled demo price comparison and direct PriceCatcher check
+- Direct official Jualan Rahmah schedule check without fabricated events
+- Local monthly travel-cost calculator
+- Expanded public benefit discovery without eligibility claims
+- Amanah Data screen explaining source, method and limitations
 
 ## Run locally
 
