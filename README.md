@@ -1,4 +1,4 @@
-# NewTenangKITA v0.2
+# NewTenangKITA v0.3
 
 Clean BM-first citizen prototype implementing:
 
@@ -17,11 +17,16 @@ Clean BM-first citizen prototype implementing:
 - MyDigital ID success, cancellation and unavailable mock outcomes
 - Session-scoped verification with logout and automatic expiry
 - Six plain-language need areas for daily life
-- Clearly labelled demo price comparison and direct PriceCatcher check
+- No fabricated price figures; direct PriceCatcher check for current prices
 - Direct official Jualan Rahmah schedule check without fabricated events
 - Local monthly travel-cost calculator
 - Expanded public benefit discovery without eligibility claims
-- Amanah Data screen explaining source, method and limitations
+- Source and transparency screen explaining method and limitations
+- Concern-specific primary actions and tappable weekly recommendations
+- Preparation checklists before citizens enter official portals
+- Paparan Mudah and device-based Malay read-aloud support
+- Plain-language MyDigital ID explanation, helpdesk and kiosk route
+- Talian Kasih telephone and WhatsApp actions
 
 ## Run locally
 

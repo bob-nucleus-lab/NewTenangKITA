@@ -1,4 +1,17 @@
-# NewTenangKITA v0.2 — Release Notes
+# NewTenangKITA v0.3 — Release Notes
+
+## v0.3 enhancements
+
+- Concern-specific Home action takes citizens directly to the relevant tool
+- Weekly recommendations are tappable and lead to the next practical step
+- Benefit cards include a preparation checklist before opening an official portal
+- Consistent source/type/decision truth labels
+- Numeric demo prices removed to prevent mistaken use or price anchoring
+- Paparan Mudah hides secondary detail and prioritises one action
+- Malay read-aloud uses speech support available on the citizen's device
+- MyDigital ID flow explains why login is needed and what TenangKITA receives
+- MyDigital ID helpdesk/kiosk route and continue-without-login option
+- Talian Kasih telephone and official WhatsApp actions
 
 ## v0.2 enhancements
 
