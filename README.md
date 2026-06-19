@@ -1,4 +1,4 @@
-# NewTenangKITA v0.3
+# NewTenangKITA v0.4
 
 Clean BM-first citizen prototype implementing:
 
@@ -27,6 +27,12 @@ Clean BM-first citizen prototype implementing:
 - Paparan Mudah and device-based Malay read-aloud support
 - Plain-language MyDigital ID explanation, helpdesk and kiosk route
 - Talian Kasih telephone and WhatsApp actions
+
+- Inclusive Access tab for OKU, elderly, caregivers, screen-reader users and low-literacy citizens
+- Optional Keperluan Akses Saya without requiring disability disclosure
+- High-contrast mode and caregiver mode
+- OKU and caregiver support journey with preparation checklist
+- Accessibility statement for prototype governance
 
 ## Run locally
 

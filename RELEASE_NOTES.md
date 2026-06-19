@@ -1,17 +1,15 @@
-# NewTenangKITA v0.3 — Release Notes
+# NewTenangKITA v0.4 — Release Notes
 
-## v0.3 enhancements
+## v0.4 enhancements
 
-- Concern-specific Home action takes citizens directly to the relevant tool
-- Weekly recommendations are tappable and lead to the next practical step
-- Benefit cards include a preparation checklist before opening an official portal
-- Consistent source/type/decision truth labels
-- Numeric demo prices removed to prevent mistaken use or price anchoring
-- Paparan Mudah hides secondary detail and prioritises one action
-- Malay read-aloud uses speech support available on the citizen's device
-- MyDigital ID flow explains why login is needed and what TenangKITA receives
-- MyDigital ID helpdesk/kiosk route and continue-without-login option
-- Talian Kasih telephone and official WhatsApp actions
+- New Inclusive Access tab for OKU, elderly citizens, caregivers, screen-reader users and low-literacy citizens
+- Optional “Keperluan Akses Saya” settings without forcing disability disclosure
+- High-contrast mode, larger-text mode, Paparan Mudah and read-aloud grouped as access support
+- Caregiver mode with consent reminder for helping family members
+- OKU & penjaga need journey with practical preparation checklist
+- JKM / human-support route added to inclusive support cards
+- Accessibility statement screen for prototype governance and pilot readiness
+- Data-trust screen now includes access and OKU limitations
 
 ## v0.2 enhancements
 
@@ -29,7 +27,7 @@
 - Guest-first citizen journey
 - Concern-led setup with optional household size and general location
 - Empathetic home summary and three weekly actions
-- Four-tab mobile navigation: Utama, Bantuan, Keperluan, Saya
+- Five-tab mobile navigation: Utama, Bantuan, Keperluan, Akses, Saya
 - MyDigital ID app-handoff simulation without collecting a password
 - Separate read-only consent for SARA, BUDI95 and STR
 - Connected-benefit demo states with persistent “DATA DEMO” labelling

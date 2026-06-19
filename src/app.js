@@ -1,8 +1,8 @@
 (() => {
   'use strict';
 
-  const LOCAL_KEY = 'newtk-v03-preferences';
-  const SESSION_KEY = 'newtk-v03-session';
+  const LOCAL_KEY = 'newtk-v04-preferences';
+  const SESSION_KEY = 'newtk-v04-session';
   const SESSION_MS = 15 * 60 * 1000;
   const defaults = {
     route: 'welcome',
@@ -16,7 +16,10 @@
     verified: false,
     consents: [],
     authAt: 0,
-    authError: ''
+    authError: '',
+    accessNeeds: [],
+    caregiverMode: false,
+    highContrast: false
   };
 
   function parseStore(store, key) {
@@ -72,7 +75,8 @@
     health: { icon: '+', label: 'Kesihatan', desc: 'Cari saluran kesihatan dan sokongan berkaitan.', link: 'https://www.malaysia.gov.my/categories/kesihatan' },
     education: { icon: '☆', label: 'Pendidikan', desc: 'Bantuan persekolahan, pengajian dan latihan.', link: 'https://www.malaysia.gov.my/my/categories/bantuan-kebajikan--kemudahan/bantuan-pendidikan' },
     housing: { icon: '⌂', label: 'Perumahan', desc: 'Program rumah dan sokongan tempat tinggal.', link: 'https://www.malaysia.gov.my/my/categories/bantuan-kebajikan--kemudahan/bantuan-perumahan' },
-    work: { icon: '◇', label: 'Kerja & pendapatan', desc: 'Pekerjaan, latihan dan perlindungan pendapatan.', link: 'https://www.malaysia.gov.my/categories/bantuan-kebajikan--kemudahan/bantuan-pekerjaan' }
+    work: { icon: '◇', label: 'Kerja & pendapatan', desc: 'Pekerjaan, latihan dan perlindungan pendapatan.', link: 'https://www.malaysia.gov.my/categories/bantuan-kebajikan--kemudahan/bantuan-pekerjaan' },
+    oku: { icon: '♿', label: 'OKU & penjaga', desc: 'Sokongan OKU, penjaga dan akses bantuan manusia.', link: 'https://www.malaysia.gov.my/' }
   };
 
   const priceSamples = ['Beras putih tempatan', 'Telur ayam', 'Minyak masak'];
@@ -84,7 +88,9 @@
     { name: 'Bantuan pendidikan', need: 'education', summary: 'Pintu masuk rasmi untuk program pendidikan yang mungkin berkaitan.', prep: ['MyKad penjaga dan anak', 'Surat atau bukti pendaftaran institusi', 'Maklumat pendapatan jika program memerlukannya'], url: needsData.education.link },
     { name: 'Bantuan perumahan', need: 'housing', summary: 'Pintu masuk rasmi untuk program rumah dan tempat tinggal.', prep: ['MyKad pemohon', 'Maklumat isi rumah', 'Bukti pendapatan atau tempat tinggal jika diminta'], url: needsData.housing.link },
     { name: 'Bantuan pekerjaan', need: 'work', summary: 'Program pekerjaan, latihan dan perlindungan pendapatan.', prep: ['MyKad', 'Maklumat pekerjaan terkini', 'Resume ringkas jika ada'], url: needsData.work.link },
-    { name: 'Perkhidmatan kesihatan', need: 'health', summary: 'Maklumat perkhidmatan dan saluran kesihatan kerajaan.', prep: ['MyKad atau dokumen pengenalan', 'Surat rujukan jika ada', 'Senarai ubat atau rekod berkaitan jika ada'], url: needsData.health.link }
+    { name: 'Perkhidmatan kesihatan', need: 'health', summary: 'Maklumat perkhidmatan dan saluran kesihatan kerajaan.', prep: ['MyKad atau dokumen pengenalan', 'Surat rujukan jika ada', 'Senarai ubat atau rekod berkaitan jika ada'], url: needsData.health.link },
+    { name: 'Sokongan OKU / JKM', need: 'oku', summary: 'Panduan awal untuk semakan bantuan, pendaftaran atau kemas kini OKU melalui saluran rasmi.', prep: ['MyKad pemohon', 'Maklumat kad atau pendaftaran OKU jika ada', 'Dokumen perubatan atau sokongan jika diminta', 'Maklumat penjaga jika berkaitan'], url: 'https://www.malaysia.gov.my/' },
+    { name: 'Bantuan penjaga', need: 'oku', summary: 'Panduan untuk keluarga atau penjaga yang membantu rakyat OKU, warga emas atau ahli keluarga yang memerlukan sokongan.', prep: ['MyKad pemohon dan individu dibantu', 'Hubungan dengan individu tersebut', 'Dokumen sokongan jika diminta agensi'], url: 'https://www.malaysia.gov.my/' }
   ];
 
   function persist() {
@@ -96,7 +102,10 @@
       state: state.state,
       household: state.household,
       largeText: state.largeText,
-      simpleMode: state.simpleMode
+      simpleMode: state.simpleMode,
+      accessNeeds: state.accessNeeds,
+      caregiverMode: state.caregiverMode,
+      highContrast: state.highContrast
     }));
     if (state.verified) {
       sessionStorage.setItem(SESSION_KEY, JSON.stringify({
@@ -109,10 +118,11 @@
     }
     document.documentElement.classList.toggle('large-text', state.largeText);
     document.documentElement.classList.toggle('simple-mode', state.simpleMode);
+    document.documentElement.classList.toggle('high-contrast', state.highContrast);
   }
 
   function phase() {
-    return `<div class="phase"><b>PROTOTAIP v0.3</b> Nilai demo dan anggaran bukan rekod rasmi. <a href="#" data-action="about-demo">Ketahui batas prototaip</a></div>`;
+    return `<div class="phase"><b>PROTOTAIP v0.4</b> Nilai demo dan anggaran bukan rekod rasmi. <a href="#" data-action="about-demo">Ketahui batas prototaip</a></div>`;
   }
 
   function top() {
@@ -132,13 +142,14 @@
       ['home', '⌂', 'Utama'],
       ['benefits', '▣', 'Bantuan'],
       ['needs', '◎', 'Keperluan'],
+      ['access', '♿', 'Akses'],
       ['me', '○', 'Saya']
     ];
     return `<nav class="tabs" aria-label="Navigasi utama">${items.map(([id, icon, label]) => `<button class="tab ${state.tab === id ? 'active' : ''}" data-tab="${id}" ${state.tab === id ? 'aria-current="page"' : ''}><span aria-hidden="true">${icon}</span>${label}</button>`).join('')}</nav>`;
   }
 
   function welcome() {
-    return shell(`<section class="card hero"><div class="hero-symbol" aria-hidden="true">♥</div><p class="eyebrow">Untuk rakyat Malaysia</p><h1>Apa yang boleh kita ringankan hari ini?</h1><p>TenangKITA membantu anda memahami bantuan, kos harian dan tindakan praktikal tanpa bahasa yang menghukum.</p><div class="button-row"><button class="button full" data-route="concern">Pilih keutamaan saya</button><button class="button-secondary full" data-action="guest">Teroka maklumat umum</button></div></section><section class="card"><h2>Apa yang TenangKITA lakukan</h2><div class="action-list"><article class="action"><span class="action-icon">1</span><div><b>Ringkaskan keadaan</b><small>Tunjukkan perkara paling penting dahulu.</small></div></article><article class="action"><span class="action-icon">2</span><div><b>Cadangkan tindakan kecil</b><small>Fokus pada apa yang boleh dibuat hari ini atau minggu ini.</small></div></article><article class="action"><span class="action-icon">3</span><div><b>Hubungkan sumber rasmi</b><small>Anda mengawal sumber yang disambungkan.</small></div></article></div></section>`, false);
+    return shell(`<section class="card hero"><div class="hero-symbol" aria-hidden="true">♥</div><p class="eyebrow">Untuk rakyat Malaysia</p><h1>Apa yang boleh kita ringankan hari ini?</h1><p>TenangKITA membantu anda memahami bantuan, kos harian dan tindakan praktikal tanpa bahasa yang menghukum.</p><div class="button-row"><button class="button full" data-route="concern">Pilih keutamaan saya</button><button class="button-secondary full" data-action="guest">Teroka maklumat umum</button></div></section><section class="card"><h2>Apa yang TenangKITA lakukan</h2><div class="action-list"><article class="action"><span class="action-icon">1</span><div><b>Ringkaskan keadaan</b><small>Tunjukkan perkara paling penting dahulu.</small></div></article><article class="action"><span class="action-icon">2</span><div><b>Cadangkan tindakan kecil</b><small>Fokus pada apa yang boleh dibuat hari ini atau minggu ini.</small></div></article><article class="action"><span class="action-icon">3</span><div><b>Hubungkan sumber rasmi</b><small>Anda mengawal sumber yang disambungkan.</small></div></article></div></section><section class="card secondary-card"><h2>Direka untuk semua</h2><p>Termasuk warga emas, OKU, penjaga, pengguna pembaca skrin dan rakyat yang mahu bantuan manusia, bukan hanya perkhidmatan digital.</p><button class="button-secondary full" data-tab-jump="access">Tetapkan keperluan akses</button></section>`, false);
   }
 
   function concern() {
@@ -226,6 +237,7 @@
   function needDetail() {
     if (state.activeNeed === 'living') return livingCostModule();
     if (state.activeNeed === 'transport') return travelModule();
+    if (state.activeNeed === 'oku') return okuModule();
     const item = needsData[state.activeNeed];
     const actions = {
       health: ['Kenal pasti bantuan yang diperlukan', 'Sediakan dokumen rawatan atau surat rujukan jika ada.'],
@@ -245,8 +257,37 @@
     return `<section class="card"><p class="eyebrow">Pengangkutan</p><h2>Anggar kos perjalanan bulanan</h2><p>Masukkan anggaran sendiri. Nilai ini dikira pada peranti dan tidak disimpan.</p><label class="field">Jarak sebulan (km)<input id="trip-km" type="number" min="0" step="10" inputmode="decimal" placeholder="Contoh: 600"></label><label class="field">Penggunaan bahan api (L/100 km)<input id="trip-eff" type="number" min="0" step="0.1" inputmode="decimal" placeholder="Contoh: 7.0"></label><label class="field">Harga bahan api (RM/L)<input id="trip-price" type="number" min="0" step="0.01" inputmode="decimal" placeholder="Masukkan harga yang anda bayar"></label><label class="field">Tol & parkir sebulan (RM)<input id="trip-extra" type="number" min="0" step="1" inputmode="decimal" placeholder="Jika ada"></label><button class="button full" data-action="calculate-trip">Kira anggaran</button><div id="trip-result" class="result-box" aria-live="polite"><small>Anggaran akan dipaparkan di sini.</small></div><div class="truth-note"><b>Status data: anggaran TenangKITA</b><span>Bukan rekod transaksi, tuntutan atau penggunaan subsidi.</span></div><a class="button-secondary full" href="https://www.budi95.gov.my/" target="_blank" rel="noopener noreferrer">Semak BUDI95 secara rasmi</a></section>`;
   }
 
-  function humanSupport() {
-    return `<section class="card"><h2>Saluran bantuan manusia</h2><p>Anda boleh mendapatkan bantuan tanpa menyelesaikan semuanya secara digital.</p><div class="support-list"><article class="support-card"><span class="action-icon">☎</span><div><b>Talian Kasih 15999</b><small>24 jam untuk kebajikan, perlindungan dan isu sosial.</small><div class="inline-actions"><a class="link" href="tel:15999">Telefon</a><a class="link" href="https://wa.me/60192615999" target="_blank" rel="noopener noreferrer">WhatsApp</a></div></div></article><article class="support-card"><span class="action-icon">!</span><div><b>Kecemasan 999</b><small>Untuk bahaya atau kecemasan yang memerlukan tindakan segera.</small><a class="link" href="tel:999">Hubungi 999</a></div></article></div><div class="truth-note"><b>Sumber: Portal Rasmi Kerajaan Malaysia</b><span>Semak semula nombor jika maklumat pada portal rasmi berubah.</span></div></section>`;
+
+  function okuModule() {
+    return `<section class="card"><p class="eyebrow">OKU & penjaga</p><h2>Sokongan yang boleh disemak</h2><p>Anda tidak perlu mendedahkan ketidakupayaan untuk menggunakan TenangKITA. Maklumat OKU hanya diperlukan apabila anda mahu menyemak bantuan rasmi berkaitan.</p><div class="action-list"><article class="action"><span class="action-icon">1</span><div><b>Semak bantuan OKU / JKM</b><small>Sediakan MyKad, maklumat OKU jika ada dan dokumen sokongan yang diminta agensi.</small></div></article><article class="action"><span class="action-icon">2</span><div><b>Sokongan penjaga</b><small>Jika anda membantu ahli keluarga, dapatkan izin mereka dan simpan dokumen hubungan atau penjagaan jika diminta.</small></div></article><article class="action"><span class="action-icon">3</span><div><b>Pilih saluran yang sesuai</b><small>Gunakan portal rasmi, telefon, WhatsApp atau kaunter jika sukar menyelesaikan secara digital.</small></div></article></div><div class="truth-row"><span><b>Jenis</b>Panduan awal</span><span><b>Keputusan</b>Oleh agensi</span></div><a class="button full" href="https://www.malaysia.gov.my/" target="_blank" rel="noopener noreferrer">Cari perkhidmatan rasmi</a></section>${humanSupport(true)}`;
+  }
+
+  function accessCentre() {
+    const options = [
+      ['largeText','Saya kurang jelas melihat teks','Saiz teks lebih besar'],
+      ['highContrast','Saya perlukan kontras lebih jelas','Kontras tinggi'],
+      ['simpleMode','Saya sukar membaca ayat panjang','Paparan mudah'],
+      ['screenReader','Saya menggunakan pembaca skrin','Label dan susunan mesra pembaca skrin'],
+      ['bigButtons','Saya perlukan butang lebih besar','Sasaran sentuh lebih besar'],
+      ['caregiver','Saya membantu ahli keluarga','Mod penjaga']
+    ];
+    return `<section class="card hero"><p class="eyebrow">Keperluan akses saya</p><h1>Gunakan TenangKITA dengan cara yang selesa.</h1><p>Bahagian ini pilihan. Anda tidak perlu menyatakan OKU untuk mendapatkan maklumat umum.</p><div class="access-grid">${options.map(([id,label,short]) => `<button class="access-choice ${isAccessOn(id) ? 'selected' : ''}" data-access="${id}" aria-pressed="${isAccessOn(id)}"><b>${label}</b><small>${short}</small></button>`).join('')}</div><div class="notice">Tetapan ini disimpan pada peranti ini sahaja dalam prototaip.</div></section><section class="card"><h2>Sokongan OKU & penjaga</h2><p>TenangKITA boleh bantu anda bersedia sebelum membuka portal rasmi atau menghubungi agensi.</p><div class="button-row"><button class="button full" data-open-need="oku">Lihat panduan OKU & penjaga</button><button class="button-secondary full" data-route="access-statement">Lihat pernyataan akses</button></div></section>${humanSupport(true)}`;
+  }
+
+  function isAccessOn(id) {
+    if (id === 'largeText') return state.largeText;
+    if (id === 'highContrast') return state.highContrast;
+    if (id === 'simpleMode') return state.simpleMode;
+    if (id === 'caregiver') return state.caregiverMode;
+    return state.accessNeeds.includes(id);
+  }
+
+  function accessStatement() {
+    return shell(`${backBar()}<section class="card"><p class="eyebrow">Pernyataan akses</p><h1>TenangKITA untuk semua rakyat.</h1><p>Prototaip ini direka untuk menyokong pengguna OKU, warga emas, penjaga dan rakyat yang kurang yakin menggunakan perkhidmatan digital.</p><ul class="plain-list"><li>Maklumat penting tidak bergantung pada warna sahaja.</li><li>Setiap perjalanan penting mempunyai pilihan bantuan manusia.</li><li>Maklumat peribadi dan manfaat hanya dipaparkan selepas pengesahan dan kebenaran.</li><li>Mod penjaga menekankan izin individu yang dibantu.</li><li>Paparan mudah, teks besar, kontras tinggi dan bacaan suara disediakan sebagai sokongan awal.</li></ul><div class="truth-note"><b>Status: prototaip</b><span>Ujian kebolehgunaan bersama komuniti OKU perlu dibuat sebelum pilot awam.</span></div></section>`, false);
+  }
+
+  function humanSupport(includeJkm = false) {
+    return `<section class="card"><h2>Saluran bantuan manusia</h2><p>Anda boleh mendapatkan bantuan tanpa menyelesaikan semuanya secara digital.</p><div class="support-list"><article class="support-card"><span class="action-icon">☎</span><div><b>Talian Kasih 15999</b><small>24 jam untuk kebajikan, perlindungan dan isu sosial.</small><div class="inline-actions"><a class="link" href="tel:15999">Telefon</a><a class="link" href="https://wa.me/60192615999" target="_blank" rel="noopener noreferrer">WhatsApp</a></div></div></article><article class="support-card"><span class="action-icon">!</span><div><b>Kecemasan 999</b><small>Untuk bahaya atau kecemasan yang memerlukan tindakan segera.</small><a class="link" href="tel:999">Hubungi 999</a></div></article>${includeJkm ? '<article class="support-card"><span class="action-icon">♿</span><div><b>JKM / pejabat kebajikan</b><small>Untuk sokongan OKU, penjaga, warga emas dan isu kebajikan. Semak kaunter terdekat melalui portal rasmi.</small><a class="link" href="https://www.malaysia.gov.my/" target="_blank" rel="noopener noreferrer">Cari perkhidmatan</a></div></article>' : ''}</div><div class="truth-note"><b>Sumber: Portal Rasmi Kerajaan Malaysia</b><span>Semak semula nombor jika maklumat pada portal rasmi berubah.</span></div></section>`;
   }
 
   function urgent() {
@@ -254,7 +295,7 @@
   }
 
   function me() {
-    return `<section class="card"><h1>Saya & privasi</h1><div class="setting-row"><div><b>Paparan mudah</b><small>Kurangkan maklumat dan tunjuk tindakan utama.</small></div><button class="button-secondary" data-action="toggle-simple">${state.simpleMode ? 'Tutup' : 'Aktifkan'}</button></div><div class="setting-row"><div><b>Saiz teks lebih besar</b><small>Mudahkan pembacaan pada peranti kecil.</small></div><button class="button-secondary" data-action="toggle-text">${state.largeText ? 'Tutup' : 'Aktifkan'}</button></div><div class="setting-row"><div><b>Bacakan halaman</b><small>Gunakan suara yang tersedia pada peranti.</small></div><button class="button-secondary" data-action="read-page">Dengar</button></div><div class="setting-row"><div><b>Keutamaan utama</b><small>${state.concern ? concerns[state.concern].label : 'Belum dipilih'}</small></div><button class="text-button" data-route="concern">Tukar</button></div><div class="setting-row"><div><b>Status identiti</b><small>${state.verified ? 'Pengesahan simulasi aktif' : 'Belum disahkan'}</small></div><span class="tag ${state.verified ? 'connected' : ''}">${state.verified ? 'Demo aktif' : 'Tetamu'}</span></div>${state.verified ? `<button class="button-secondary full" data-action="logout">Keluar daripada sesi demo</button>` : ''}</section><section class="card secondary-card"><h2>Sumber & ketelusan</h2><p>Lihat dari mana maklumat datang, cara ia digunakan dan batasnya.</p><button class="button-secondary full" data-route="data-trust">Lihat sumber & kaedah</button></section><section class="card secondary-card"><h2>Pusat kebenaran</h2>${Object.entries(sources).map(([id, source]) => `<div class="setting-row"><div><b>${source.name}</b><small>${state.consents.includes(id) ? 'Kebenaran melihat maklumat aktif' : 'Tidak disambungkan'}</small></div>${state.consents.includes(id) ? `<button class="text-button" data-disconnect="${id}">Tarik balik</button>` : '<span class="tag">Tiada akses</span>'}</div>`).join('')}</section><section class="card secondary-card"><h2>Kawalan data</h2><p>Pilihan umum disimpan pada peranti ini. Pengesahan dan kebenaran tamat bersama sesi.</p><button class="button-secondary danger-button full" data-action="reset">Padam semua data prototaip</button></section>`;
+    return `<section class="card"><h1>Saya & privasi</h1><div class="setting-row"><div><b>Keperluan akses</b><small>Teks besar, kontras, paparan mudah, pembaca skrin atau mod penjaga.</small></div><button class="button-secondary" data-tab-jump="access">Urus</button></div><div class="setting-row"><div><b>Paparan mudah</b><small>Kurangkan maklumat dan tunjuk tindakan utama.</small></div><button class="button-secondary" data-action="toggle-simple">${state.simpleMode ? 'Tutup' : 'Aktifkan'}</button></div><div class="setting-row"><div><b>Saiz teks lebih besar</b><small>Mudahkan pembacaan pada peranti kecil.</small></div><button class="button-secondary" data-action="toggle-text">${state.largeText ? 'Tutup' : 'Aktifkan'}</button></div><div class="setting-row"><div><b>Kontras tinggi</b><small>Tambah kejelasan untuk sesetengah pengguna.</small></div><button class="button-secondary" data-action="toggle-contrast">${state.highContrast ? 'Tutup' : 'Aktifkan'}</button></div><div class="setting-row"><div><b>Mod penjaga</b><small>${state.caregiverMode ? 'Aktif: gunakan maklumat dengan izin individu dibantu.' : 'Untuk membantu ahli keluarga dengan izin mereka.'}</small></div><button class="button-secondary" data-action="toggle-caregiver">${state.caregiverMode ? 'Tutup' : 'Aktifkan'}</button></div><div class="setting-row"><div><b>Bacakan halaman</b><small>Gunakan suara yang tersedia pada peranti.</small></div><button class="button-secondary" data-action="read-page">Dengar</button></div><div class="setting-row"><div><b>Keutamaan utama</b><small>${state.concern ? concerns[state.concern].label : 'Belum dipilih'}</small></div><button class="text-button" data-route="concern">Tukar</button></div><div class="setting-row"><div><b>Status identiti</b><small>${state.verified ? 'Pengesahan simulasi aktif' : 'Belum disahkan'}</small></div><span class="tag ${state.verified ? 'connected' : ''}">${state.verified ? 'Demo aktif' : 'Tetamu'}</span></div>${state.verified ? `<button class="button-secondary full" data-action="logout">Keluar daripada sesi demo</button>` : ''}</section><section class="card secondary-card"><h2>Sumber & ketelusan</h2><p>Lihat dari mana maklumat datang, cara ia digunakan dan batasnya.</p><button class="button-secondary full" data-route="data-trust">Lihat sumber & kaedah</button></section><section class="card secondary-card"><h2>Pusat kebenaran</h2>${Object.entries(sources).map(([id, source]) => `<div class="setting-row"><div><b>${source.name}</b><small>${state.consents.includes(id) ? 'Kebenaran melihat maklumat aktif' : 'Tidak disambungkan'}</small></div>${state.consents.includes(id) ? `<button class="text-button" data-disconnect="${id}">Tarik balik</button>` : '<span class="tag">Tiada akses</span>'}</div>`).join('')}</section><section class="card secondary-card"><h2>Kawalan data</h2><p>Pilihan umum disimpan pada peranti ini. Pengesahan dan kebenaran tamat bersama sesi.</p><button class="button-secondary danger-button full" data-action="reset">Padam semua data prototaip</button></section>`;
   }
 
   function dataTrust() {
@@ -263,7 +304,8 @@
       ['Jualan Rahmah', 'Belum disambungkan', 'Prototaip membuka jadual rasmi KPDN tanpa menyalin acara.'],
       ['Kalkulator perjalanan', 'Anggaran tempatan', 'Formula: bahan api + tol/parkir berdasarkan input pengguna. Input tidak disimpan.'],
       ['SARA, BUDI95 & STR', 'Data demo selepas izin', 'Tiada API sebenar. Baki, status dan penggunaan hanyalah simulasi.'],
-      ['Katalog bantuan', 'Pautan portal rasmi', 'TenangKITA membantu mencari; agensi menentukan syarat dan kelayakan.']
+      ['Katalog bantuan', 'Pautan portal rasmi', 'TenangKITA membantu mencari; agensi menentukan syarat dan kelayakan.'],
+      ['Akses & OKU', 'Pilihan pengguna', 'Tetapan akses disimpan pada peranti. Bantuan OKU perlu disemak melalui agensi rasmi.']
     ];
     return shell(`${backBar()}<section class="card"><p class="eyebrow">Sumber & ketelusan</p><h1>Kenali setiap maklumat.</h1><p>Setiap modul menyatakan sama ada maklumat itu rasmi, demo, anggaran atau belum disambungkan.</p><div class="source-list">${rows.map(row => `<article class="source-card"><div><h3>${row[0]}</h3><span class="tag">${row[1]}</span></div><p>${row[2]}</p></article>`).join('')}</div></section><section class="card"><h2>Prinsip prototaip</h2><ul class="plain-list"><li>Tidak mengisytiharkan kelayakan bantuan.</li><li>Tidak mereka baki, lokasi acara atau harga sebagai data semasa.</li><li>Membuka portal rasmi untuk pengesahan akhir.</li><li>Mengutamakan tindakan mudah tanpa memalukan pengguna.</li></ul></section>`, false);
   }
@@ -290,12 +332,12 @@
   }
 
   function main() {
-    const view = { home, benefits, needs, me }[state.tab] || home;
+    const view = { home, benefits, needs, access: accessCentre, me }[state.tab] || home;
     return shell(view());
   }
 
   function about() {
-    alert('NewTenangKITA v0.3 ialah prototaip. MyDigital ID dan data manfaat adalah simulasi. Harga sebenar tidak dipaparkan; kalkulator menghasilkan anggaran pada peranti. Tiada kelayakan, baki atau transaksi sebenar diproses.');
+    alert('NewTenangKITA v0.4 ialah prototaip inklusif. MyDigital ID, data manfaat dan sokongan OKU adalah simulasi atau pautan panduan. Harga sebenar tidak dipaparkan; kalkulator menghasilkan anggaran pada peranti. Tiada kelayakan, baki atau transaksi sebenar diproses.');
   }
 
   function navigate(route, tab = state.tab, replace = false) {
@@ -331,6 +373,7 @@
       'auth-error': authError,
       'auth-help': authHelp,
       'data-trust': dataTrust,
+      'access-statement': accessStatement,
       consent,
       main
     };
@@ -383,6 +426,24 @@
     });
     document.querySelectorAll('[data-action="toggle-simple"]').forEach(element => {
       element.onclick = () => { state.simpleMode = !state.simpleMode; render(); };
+    });
+    document.querySelectorAll('[data-action="toggle-contrast"]').forEach(element => {
+      element.onclick = () => { state.highContrast = !state.highContrast; render(); };
+    });
+    document.querySelectorAll('[data-action="toggle-caregiver"]').forEach(element => {
+      element.onclick = () => { state.caregiverMode = !state.caregiverMode; render(); };
+    });
+    document.querySelectorAll('[data-access]').forEach(element => {
+      element.onclick = () => {
+        const id = element.dataset.access;
+        if (id === 'largeText') state.largeText = !state.largeText;
+        else if (id === 'highContrast') state.highContrast = !state.highContrast;
+        else if (id === 'simpleMode') state.simpleMode = !state.simpleMode;
+        else if (id === 'caregiver') state.caregiverMode = !state.caregiverMode;
+        else if (state.accessNeeds.includes(id)) state.accessNeeds = state.accessNeeds.filter(item => item !== id);
+        else state.accessNeeds = [...state.accessNeeds, id];
+        render();
+      };
     });
     document.querySelectorAll('[data-action="read-page"]').forEach(element => {
       element.onclick = () => {
@@ -484,6 +545,7 @@
 
   document.documentElement.classList.toggle('large-text', state.largeText);
   document.documentElement.classList.toggle('simple-mode', state.simpleMode);
+    document.documentElement.classList.toggle('high-contrast', state.highContrast);
   history.replaceState({ newtk: true, route: state.route, tab: state.tab }, '', location.href);
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
