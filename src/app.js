@@ -1,8 +1,8 @@
 (() => {
   'use strict';
 
-  const LOCAL_KEY = 'newtk-v04-preferences';
-  const SESSION_KEY = 'newtk-v04-session';
+  const LOCAL_KEY = 'newtk-v05-preferences';
+  const SESSION_KEY = 'newtk-v05-session';
   const SESSION_MS = 15 * 60 * 1000;
   const defaults = {
     route: 'welcome',
@@ -19,7 +19,11 @@
     authError: '',
     accessNeeds: [],
     caregiverMode: false,
-    highContrast: false
+    highContrast: false,
+    dosmStatus: 'idle',
+    dosmRows: [],
+    dosmUpdatedAt: '',
+    dosmError: ''
   };
 
   function parseStore(store, key) {
@@ -66,8 +70,30 @@
       name: 'STR / HASiL',
       scope: 'Status permohonan dan bayaran',
       url: 'https://bantuantunai.hasil.gov.my/'
+    },
+    padu: {
+      name: 'PADU',
+      scope: 'Profil isi rumah yang disahkan kerajaan, tertakluk kelulusan dan kebenaran khusus',
+      url: 'https://padu.gov.my/',
+      future: true
     }
   };
+
+
+  const resourceRegistry = [
+    { id: 'opendosm', title: 'OpenDOSM', owner: 'Jabatan Perangkaan Malaysia', type: 'API rasmi terbuka', status: 'Boleh disambung', use: 'Konteks ekonomi dan sosial; bukan keputusan individu.', url: 'https://developer.data.gov.my/static-api/opendosm' },
+    { id: 'pricecatcher', title: 'PriceCatcher', owner: 'KPDN / DOSM melalui data.gov.my', type: 'Dataset rasmi terbuka', status: 'Perlu adapter/cache', use: 'Harga item di premis; bukan pengganti CPI.', url: 'https://data.gov.my/data-catalogue/pricecatcher' },
+    { id: 'pjrm', title: 'Jualan Rahmah', owner: 'KPDN', type: 'Portal rasmi', status: 'Pautan rasmi', use: 'Semak jadual dan lokasi; jangan reka acara.', url: 'https://pjrm.kpdn.gov.my/' },
+    { id: 'mydigitalid', title: 'MyDigital ID', owner: 'My Digital ID Sdn. Bhd.', type: 'Identiti digital', status: 'Simulasi prototaip', use: 'Pengesahan identiti; bukan persetujuan automatik data bantuan.', url: 'https://www.digital-id.my/en/support' },
+    { id: 'padu', title: 'PADU', owner: 'Kerajaan Malaysia', type: 'Profil peribadi berasaskan kebenaran', status: 'Fasa akan datang', use: 'Profil isi rumah untuk cadangan; bukan label atau hukuman.', url: 'https://padu.gov.my/' },
+    { id: 'jkm', title: 'JKM / OKU', owner: 'Jabatan Kebajikan Masyarakat', type: 'Maklumat bantuan dan kaunter', status: 'Pautan rasmi', use: 'Sokongan OKU, penjaga, warga emas dan kebajikan.', url: 'https://www.malaysia.gov.my/' }
+  ];
+
+  const opendosmDatasets = [
+    { id: 'cpi_state', label: 'CPI mengikut negeri', purpose: 'Konteks tekanan harga mengikut negeri.' },
+    { id: 'cpi_lowincome', label: 'CPI isi rumah berpendapatan rendah', purpose: 'Konteks kos yang mungkin lebih terasa kepada isi rumah rentan.' },
+    { id: 'hies_state', label: 'Pendapatan & perbelanjaan isi rumah', purpose: 'Penanda aras latar; bukan penilaian keluarga.' }
+  ];
 
   const needsData = {
     living: { icon: '◫', label: 'Kos sara hidup', desc: 'Harga asas, jualan berhemah dan bantuan tunai.', link: 'https://www.malaysia.gov.my/categories/bantuan-kebajikan--kemudahan/bantuan-kewangan' },
@@ -122,7 +148,7 @@
   }
 
   function phase() {
-    return `<div class="phase"><b>PROTOTAIP v0.4</b> Nilai demo dan anggaran bukan rekod rasmi. <a href="#" data-action="about-demo">Ketahui batas prototaip</a></div>`;
+    return `<div class="phase"><b>PROTOTAIP v0.5</b> Nilai demo dan anggaran bukan rekod rasmi. <a href="#" data-action="about-demo">Ketahui batas prototaip</a></div>`;
   }
 
   function top() {
@@ -159,7 +185,7 @@
   }
 
   function guestHome() {
-    return `<section class="card hero"><p class="eyebrow">Teroka tanpa log masuk</p><h1>Mulakan dengan maklumat umum.</h1><p>Tiada lokasi, saiz isi rumah atau identiti diandaikan untuk anda.</p><button class="button" data-route="concern">Pilih keutamaan jika mahu</button></section><section class="card"><h2>Boleh dibuat sekarang</h2><div class="action-list"><article class="action"><span class="action-icon">1</span><div><b>Teroka bantuan awam</b><small>Lihat SARA, STR dan program lain tanpa menentukan kelayakan.</small></div></article><article class="action"><span class="action-icon">2</span><div><b>Semak sumber rasmi</b><small>Buka portal agensi untuk syarat dan maklumat terkini.</small></div></article><article class="action"><span class="action-icon">3</span><div><b>Dapatkan bantuan manusia</b><small>Saluran bantuan kekal tersedia tanpa pengesahan identiti.</small></div></article></div></section>`;
+    return `<section class="card hero"><p class="eyebrow">Teroka tanpa log masuk</p><h1>Mulakan dengan maklumat umum.</h1><p>Tiada lokasi, saiz isi rumah atau identiti diandaikan untuk anda.</p><button class="button" data-route="concern">Pilih keutamaan jika mahu</button></section><section class="card"><h2>Boleh dibuat sekarang</h2><div class="action-list"><article class="action"><span class="action-icon">1</span><div><b>Teroka bantuan awam</b><small>Lihat SARA, STR dan program lain tanpa menentukan kelayakan.</small></div></article><button class="action action-button" data-route="data-trust"><span class="action-icon">2</span><span><b>Semak sumber rasmi</b><small>Lihat OpenDOSM, PriceCatcher, PADU dan had data.</small></span><span class="action-arrow" aria-hidden="true">›</span></button><article class="action"><span class="action-icon">3</span><div><b>Dapatkan bantuan manusia</b><small>Saluran bantuan kekal tersedia tanpa pengesahan identiti.</small></div></article></div></section>`;
   }
 
   function home() {
@@ -173,7 +199,7 @@
       children: ['education', 'Semak bantuan pendidikan'],
       income: ['work', 'Semak bantuan kerja & pendapatan']
     }[state.concern];
-    return `<section class="card hero"><p class="eyebrow">Ringkasan anda hari ini</p><h1>Kita fokus pada ${current.label.toLowerCase()} dahulu.</h1><p>Tidak perlu semak semuanya sekarang. Mulakan dengan satu tindakan kecil.</p><button class="button full" data-open-need="${primary[0]}">${primary[1]}</button></section><section class="card"><h2>Tindakan minggu ini</h2><p class="detail-extra">Tekan mana-mana tindakan untuk terus ke langkah seterusnya.</p><div class="action-list">${weeklyActions().map((item, index) => `<button class="action action-button" ${item[2] === 'benefits' ? 'data-tab-jump="benefits"' : `data-open-need="${item[2]}"`}><span class="action-icon">${index + 1}</span><span><b>${item[0]}</b><small>${item[1]}</small></span><span class="action-arrow" aria-hidden="true">›</span></button>`).join('')}</div></section><section class="card secondary-card"><h2>Status ringkas</h2><div class="status-grid"><article class="mini-card"><span>Lokasi umum</span><b>${state.state || 'Tidak dinyatakan'}</b></article><article class="mini-card"><span>Ahli isi rumah</span><b>${state.household || 'Tidak dinyatakan'}</b></article><article class="mini-card"><span>Sumber yang anda benarkan</span><b>${state.consents.length}</b></article></div><div class="notice">Semak portal rasmi sebelum membuat keputusan kewangan.</div></section>`;
+    return `<section class="card hero"><p class="eyebrow">Ringkasan anda hari ini</p><h1>Kita fokus pada ${current.label.toLowerCase()} dahulu.</h1><p>Tidak perlu semak semuanya sekarang. Mulakan dengan satu tindakan kecil.</p><button class="button full" data-open-need="${primary[0]}">${primary[1]}</button></section><section class="card"><h2>Tindakan minggu ini</h2><p class="detail-extra">Tekan mana-mana tindakan untuk terus ke langkah seterusnya.</p><div class="action-list">${weeklyActions().map((item, index) => `<button class="action action-button" ${item[2] === 'benefits' ? 'data-tab-jump="benefits"' : `data-open-need="${item[2]}"`}><span class="action-icon">${index + 1}</span><span><b>${item[0]}</b><small>${item[1]}</small></span><span class="action-arrow" aria-hidden="true">›</span></button>`).join('')}</div></section><section class="card secondary-card"><h2>Status ringkas</h2><div class="status-grid"><article class="mini-card"><span>Lokasi umum</span><b>${state.state || 'Tidak dinyatakan'}</b></article><article class="mini-card"><span>Ahli isi rumah</span><b>${state.household || 'Tidak dinyatakan'}</b></article><article class="mini-card"><span>Sumber yang anda benarkan</span><b>${state.consents.length}</b></article></div><div class="notice">Semak portal rasmi sebelum membuat keputusan kewangan.</div></section><section class="card secondary-card"><h2>Amanah Data</h2><p>Lihat apa yang TenangKITA tahu, apa yang tidak diketahui, dan sumber rasmi yang digunakan.</p><button class="button-secondary full" data-route="data-trust">Lihat sumber & batas data</button></section>`;
   }
 
   function urgentSummary(showMore = true) {
@@ -206,7 +232,7 @@
     if (!state.verified) {
       return `<section class="card hero"><p class="eyebrow">Bantuan peribadi</p><h1>Lihat maklumat anda dengan selamat.</h1><p>Log masuk hanya diperlukan untuk melihat status, baki atau penggunaan yang berkaitan dengan diri anda.</p><div class="privacy"><b>TenangKITA tidak meminta kata laluan MyDigital ID.</b><br>Pengesahan berlaku dalam aplikasi MyDigital ID.</div><button class="button full" data-route="auth-intro">Log masuk dengan MyDigital ID</button><a class="button-secondary full official-jump" href="#official-list">Lihat pilihan semakan rasmi</a></section>${benefitDiscovery()}${publicBenefits()}`;
     }
-    return `<div class="demo-banner">PENGESAHAN & DATA DEMO — Bukan identiti, baki, transaksi atau keputusan sebenar.</div><section class="card"><h1>Bantuan saya</h1><p>Hanya sumber yang anda izinkan dipaparkan. Sesi simulasi tamat selepas 15 minit.</p>${Object.keys(sources).map(benefitCard).join('')}</section>${benefitDiscovery()}`;
+    return `<div class="demo-banner">PENGESAHAN & DATA DEMO — Bukan identiti, baki, transaksi atau keputusan sebenar.</div><section class="card"><h1>Bantuan saya</h1><p>Hanya sumber yang anda izinkan dipaparkan. Sesi simulasi tamat selepas 15 minit.</p>${Object.keys(sources).filter(id => !sources[id].future).map(benefitCard).join('')}</section>${benefitDiscovery()}`;
   }
 
   function benefitDiscovery() {
@@ -216,7 +242,7 @@
   }
 
   function publicBenefits() {
-    return `<section class="card" id="official-list"><h2>Semakan rasmi tanpa log masuk TenangKITA</h2><p>Pilih portal yang berkaitan. Portal agensi mungkin mempunyai kaedah pengesahan sendiri.</p><div class="official-grid">${Object.values(sources).map(source => `<a class="official-card" href="${source.url}" target="_blank" rel="noopener noreferrer"><b>${source.name}</b><small>${source.scope}</small><span>Semak rasmi ›</span></a>`).join('')}<a class="official-card" href="https://www.malaysia.gov.my/" target="_blank" rel="noopener noreferrer"><b>Program lain</b><small>Perkhidmatan dan maklumat kerajaan Malaysia.</small><span>Teroka ›</span></a></div></section>`;
+    return `<section class="card" id="official-list"><h2>Semakan rasmi tanpa log masuk TenangKITA</h2><p>Pilih portal yang berkaitan. Portal agensi mungkin mempunyai kaedah pengesahan sendiri.</p><div class="official-grid">${Object.values(sources).filter(source => !source.future).map(source => `<a class="official-card" href="${source.url}" target="_blank" rel="noopener noreferrer"><b>${source.name}</b><small>${source.scope}</small><span>Semak rasmi ›</span></a>`).join('')}<a class="official-card" href="https://www.malaysia.gov.my/" target="_blank" rel="noopener noreferrer"><b>Program lain</b><small>Perkhidmatan dan maklumat kerajaan Malaysia.</small><span>Teroka ›</span></a></div></section>`;
   }
 
   function benefitCard(id) {
@@ -295,19 +321,34 @@
   }
 
   function me() {
-    return `<section class="card"><h1>Saya & privasi</h1><div class="setting-row"><div><b>Keperluan akses</b><small>Teks besar, kontras, paparan mudah, pembaca skrin atau mod penjaga.</small></div><button class="button-secondary" data-tab-jump="access">Urus</button></div><div class="setting-row"><div><b>Paparan mudah</b><small>Kurangkan maklumat dan tunjuk tindakan utama.</small></div><button class="button-secondary" data-action="toggle-simple">${state.simpleMode ? 'Tutup' : 'Aktifkan'}</button></div><div class="setting-row"><div><b>Saiz teks lebih besar</b><small>Mudahkan pembacaan pada peranti kecil.</small></div><button class="button-secondary" data-action="toggle-text">${state.largeText ? 'Tutup' : 'Aktifkan'}</button></div><div class="setting-row"><div><b>Kontras tinggi</b><small>Tambah kejelasan untuk sesetengah pengguna.</small></div><button class="button-secondary" data-action="toggle-contrast">${state.highContrast ? 'Tutup' : 'Aktifkan'}</button></div><div class="setting-row"><div><b>Mod penjaga</b><small>${state.caregiverMode ? 'Aktif: gunakan maklumat dengan izin individu dibantu.' : 'Untuk membantu ahli keluarga dengan izin mereka.'}</small></div><button class="button-secondary" data-action="toggle-caregiver">${state.caregiverMode ? 'Tutup' : 'Aktifkan'}</button></div><div class="setting-row"><div><b>Bacakan halaman</b><small>Gunakan suara yang tersedia pada peranti.</small></div><button class="button-secondary" data-action="read-page">Dengar</button></div><div class="setting-row"><div><b>Keutamaan utama</b><small>${state.concern ? concerns[state.concern].label : 'Belum dipilih'}</small></div><button class="text-button" data-route="concern">Tukar</button></div><div class="setting-row"><div><b>Status identiti</b><small>${state.verified ? 'Pengesahan simulasi aktif' : 'Belum disahkan'}</small></div><span class="tag ${state.verified ? 'connected' : ''}">${state.verified ? 'Demo aktif' : 'Tetamu'}</span></div>${state.verified ? `<button class="button-secondary full" data-action="logout">Keluar daripada sesi demo</button>` : ''}</section><section class="card secondary-card"><h2>Sumber & ketelusan</h2><p>Lihat dari mana maklumat datang, cara ia digunakan dan batasnya.</p><button class="button-secondary full" data-route="data-trust">Lihat sumber & kaedah</button></section><section class="card secondary-card"><h2>Pusat kebenaran</h2>${Object.entries(sources).map(([id, source]) => `<div class="setting-row"><div><b>${source.name}</b><small>${state.consents.includes(id) ? 'Kebenaran melihat maklumat aktif' : 'Tidak disambungkan'}</small></div>${state.consents.includes(id) ? `<button class="text-button" data-disconnect="${id}">Tarik balik</button>` : '<span class="tag">Tiada akses</span>'}</div>`).join('')}</section><section class="card secondary-card"><h2>Kawalan data</h2><p>Pilihan umum disimpan pada peranti ini. Pengesahan dan kebenaran tamat bersama sesi.</p><button class="button-secondary danger-button full" data-action="reset">Padam semua data prototaip</button></section>`;
+    return `<section class="card"><h1>Saya & privasi</h1><div class="setting-row"><div><b>Keperluan akses</b><small>Teks besar, kontras, paparan mudah, pembaca skrin atau mod penjaga.</small></div><button class="button-secondary" data-tab-jump="access">Urus</button></div><div class="setting-row"><div><b>Paparan mudah</b><small>Kurangkan maklumat dan tunjuk tindakan utama.</small></div><button class="button-secondary" data-action="toggle-simple">${state.simpleMode ? 'Tutup' : 'Aktifkan'}</button></div><div class="setting-row"><div><b>Saiz teks lebih besar</b><small>Mudahkan pembacaan pada peranti kecil.</small></div><button class="button-secondary" data-action="toggle-text">${state.largeText ? 'Tutup' : 'Aktifkan'}</button></div><div class="setting-row"><div><b>Kontras tinggi</b><small>Tambah kejelasan untuk sesetengah pengguna.</small></div><button class="button-secondary" data-action="toggle-contrast">${state.highContrast ? 'Tutup' : 'Aktifkan'}</button></div><div class="setting-row"><div><b>Mod penjaga</b><small>${state.caregiverMode ? 'Aktif: gunakan maklumat dengan izin individu dibantu.' : 'Untuk membantu ahli keluarga dengan izin mereka.'}</small></div><button class="button-secondary" data-action="toggle-caregiver">${state.caregiverMode ? 'Tutup' : 'Aktifkan'}</button></div><div class="setting-row"><div><b>Bacakan halaman</b><small>Gunakan suara yang tersedia pada peranti.</small></div><button class="button-secondary" data-action="read-page">Dengar</button></div><div class="setting-row"><div><b>Keutamaan utama</b><small>${state.concern ? concerns[state.concern].label : 'Belum dipilih'}</small></div><button class="text-button" data-route="concern">Tukar</button></div><div class="setting-row"><div><b>Status identiti</b><small>${state.verified ? 'Pengesahan simulasi aktif' : 'Belum disahkan'}</small></div><span class="tag ${state.verified ? 'connected' : ''}">${state.verified ? 'Demo aktif' : 'Tetamu'}</span></div>${state.verified ? `<button class="button-secondary full" data-action="logout">Keluar daripada sesi demo</button>` : ''}</section><section class="card secondary-card"><h2>Sumber & ketelusan</h2><p>Lihat dari mana maklumat datang, cara ia digunakan dan batasnya.</p><button class="button-secondary full" data-route="data-trust">Lihat sumber & kaedah</button></section><section class="card secondary-card"><h2>Pusat kebenaran</h2>${Object.entries(sources).filter(([id, source]) => !source.future).map(([id, source]) => `<div class="setting-row"><div><b>${source.name}</b><small>${state.consents.includes(id) ? 'Kebenaran melihat maklumat aktif' : 'Tidak disambungkan'}</small></div>${state.consents.includes(id) ? `<button class="text-button" data-disconnect="${id}">Tarik balik</button>` : '<span class="tag">Tiada akses</span>'}</div>`).join('')}</section><section class="card secondary-card"><h2>Kawalan data</h2><p>Pilihan umum disimpan pada peranti ini. Pengesahan dan kebenaran tamat bersama sesi.</p><button class="button-secondary danger-button full" data-action="reset">Padam semua data prototaip</button></section>`;
   }
 
   function dataTrust() {
-    const rows = [
-      ['Harga barang', 'Belum disambungkan', 'Tiada angka dipaparkan. Prototaip membuka PriceCatcher untuk harga semasa.'],
-      ['Jualan Rahmah', 'Belum disambungkan', 'Prototaip membuka jadual rasmi KPDN tanpa menyalin acara.'],
-      ['Kalkulator perjalanan', 'Anggaran tempatan', 'Formula: bahan api + tol/parkir berdasarkan input pengguna. Input tidak disimpan.'],
-      ['SARA, BUDI95 & STR', 'Data demo selepas izin', 'Tiada API sebenar. Baki, status dan penggunaan hanyalah simulasi.'],
-      ['Katalog bantuan', 'Pautan portal rasmi', 'TenangKITA membantu mencari; agensi menentukan syarat dan kelayakan.'],
-      ['Akses & OKU', 'Pilihan pengguna', 'Tetapan akses disimpan pada peranti. Bantuan OKU perlu disemak melalui agensi rasmi.']
-    ];
-    return shell(`${backBar()}<section class="card"><p class="eyebrow">Sumber & ketelusan</p><h1>Kenali setiap maklumat.</h1><p>Setiap modul menyatakan sama ada maklumat itu rasmi, demo, anggaran atau belum disambungkan.</p><div class="source-list">${rows.map(row => `<article class="source-card"><div><h3>${row[0]}</h3><span class="tag">${row[1]}</span></div><p>${row[2]}</p></article>`).join('')}</div></section><section class="card"><h2>Prinsip prototaip</h2><ul class="plain-list"><li>Tidak mengisytiharkan kelayakan bantuan.</li><li>Tidak mereka baki, lokasi acara atau harga sebagai data semasa.</li><li>Membuka portal rasmi untuk pengesahan akhir.</li><li>Mengutamakan tindakan mudah tanpa memalukan pengguna.</li></ul></section>`, false);
+    return shell(`${backBar()}<section class="card"><p class="eyebrow">Amanah Data</p><h1>Apa yang diketahui, dan apa yang belum diketahui.</h1><p>TenangKITA hanya menggunakan data untuk memberi panduan. Ia tidak menentukan kelayakan, status ekonomi atau keputusan rasmi.</p><div class="action-list"><article class="action"><span class="action-icon">✓</span><div><b>Apa yang boleh digunakan</b><small>Data terbuka rasmi seperti OpenDOSM untuk konteks negara dan negeri.</small></div></article><article class="action"><span class="action-icon">?</span><div><b>Apa yang belum diketahui</b><small>Profil sebenar keluarga, baki bantuan dan status permohonan tanpa kebenaran anda.</small></div></article><article class="action"><span class="action-icon">!</span><div><b>Apa yang perlu disemak rasmi</b><small>Kelayakan, bayaran, baki, kuota dan keputusan akhir oleh agensi.</small></div></article></div></section>${opendosmPanel()}${resourceRegistryPanel()}${paduReadinessPanel()}<section class="card"><h2>Prinsip prototaip</h2><ul class="plain-list"><li>Tidak mengisytiharkan kelayakan bantuan.</li><li>Tidak mereka baki, lokasi acara atau harga sebagai data semasa.</li><li>Membuka portal rasmi untuk pengesahan akhir.</li><li>Mengutamakan tindakan mudah tanpa memalukan pengguna.</li></ul></section>`, false);
+  }
+
+  function opendosmPanel() {
+    const statusText = {
+      idle: 'Belum dimuatkan',
+      loading: 'Sedang cuba memuatkan',
+      ready: 'Data berjaya dimuatkan',
+      error: 'Tidak dapat dimuatkan'
+    }[state.dosmStatus] || 'Belum dimuatkan';
+    const rows = state.dosmRows.length ? state.dosmRows.slice(0, 3).map(row => `<article class="source-card"><div><h3>${escapeText(row.dataset || row.id || 'OpenDOSM')}</h3><span class="tag official">Rasmi</span></div><p>${escapeText(row.date || row.period || row.year || 'Rekod diterima daripada API')}</p><small>${escapeText(JSON.stringify(row).slice(0, 170))}${JSON.stringify(row).length > 170 ? '…' : ''}</small></article>`).join('') : `<div class="truth-note"><b>Belum ada data dipaparkan</b><span>Tekan butang di bawah untuk menguji sambungan API. Jika gagal, prototaip masih membuka dokumentasi rasmi.</span></div>`;
+    return `<section class="card"><p class="eyebrow">OpenDOSM</p><h2>Konteks rasmi, bukan penilaian keluarga.</h2><p>Data OpenDOSM membantu menerangkan perubahan kos atau keadaan ekonomi. Ia tidak cukup untuk menilai keadaan sebenar isi rumah seseorang.</p><div class="truth-row"><span><b>Status</b>${statusText}</span><span><b>Kemas kini aplikasi</b>${state.dosmUpdatedAt || 'Belum dicuba'}</span></div><div class="source-list">${rows}</div>${state.dosmError ? `<div class="notice"><b>API tidak dapat dicapai:</b> ${escapeText(state.dosmError)}. Gunakan pautan rasmi sebagai sandaran.</div>` : ''}<div class="button-row"><button class="button full" data-action="load-opendosm">Cuba muat OpenDOSM</button><a class="button-secondary full" href="https://developer.data.gov.my/static-api/opendosm" target="_blank" rel="noopener noreferrer">Buka dokumentasi OpenDOSM</a></div><details class="prep"><summary>Dataset yang dicadangkan</summary><ul>${opendosmDatasets.map(item => `<li><b>${item.label}</b> — ${item.purpose}</li>`).join('')}</ul></details></section>`;
+  }
+
+  function resourceRegistryPanel() {
+    return `<section class="card"><p class="eyebrow">Verified Resource Registry</p><h2>Daftar sumber yang dibenarkan.</h2><p>Setiap sumber perlu ada pemilik, kegunaan, status sambungan dan batas sebelum dipaparkan kepada rakyat.</p><div class="source-list">${resourceRegistry.map(item => `<article class="source-card"><div><h3>${item.title}</h3><span class="tag">${item.status}</span></div><p><b>Pemilik:</b> ${item.owner}</p><p><b>Kegunaan:</b> ${item.use}</p><div class="truth-row"><span><b>Jenis</b>${item.type}</span><span><b>Had</b>Perlu semakan rasmi</span></div><a class="button-secondary" href="${item.url}" target="_blank" rel="noopener noreferrer">Buka sumber</a></article>`).join('')}</div></section>`;
+  }
+
+  function paduReadinessPanel() {
+    return `<section class="card"><p class="eyebrow">PADU readiness</p><h2>Untuk fasa akan datang, dengan izin khusus.</h2><p>PADU tidak patut digunakan sebagai data terbuka. Ia hanya sesuai sebagai sambungan profil berasaskan kebenaran, selepas MyDigital ID dan kelulusan pemilik sistem.</p><div class="action-list"><article class="action"><span class="action-icon">1</span><div><b>Pengguna memilih untuk sambung PADU</b><small>TenangKITA tetap berguna tanpa PADU.</small></div></article><article class="action"><span class="action-icon">2</span><div><b>Data minimum sahaja</b><small>Contohnya profil isi rumah yang relevan, bukan butiran mentah yang tidak perlu.</small></div></article><article class="action"><span class="action-icon">3</span><div><b>Cadangan yang boleh dijelaskan</b><small>Tiada label miskin, skor, atau keputusan automatik.</small></div></article></div><div class="privacy">PADU tidak disambungkan dalam prototaip ini. Bahagian ini hanya menunjukkan kesediaan EA dan aliran persetujuan masa hadapan.</div></section>`;
+  }
+
+  function escapeText(value) {
+    return String(value ?? '').replace(/[&<>'"]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[char]));
   }
 
   function authIntro() {
@@ -328,7 +369,7 @@
   }
 
   function consent() {
-    return shell(`${backBar()}<section class="card"><p class="eyebrow">Pengesahan berjaya — simulasi</p><h1>Pilih maklumat yang boleh dilihat</h1><p>Anda tentukan sumber yang boleh dibaca. TenangKITA tidak mengubah permohonan atau rekod.</p>${Object.entries(sources).map(([id, source]) => `<article class="consent-item"><label><input type="checkbox" value="${id}" class="consent-check" ${state.consents.includes(id) ? 'checked' : ''}><span>${source.name}<small>${source.scope}. TenangKITA hanya melihat maklumat yang anda benarkan.</small></span></label></article>`).join('')}<div class="privacy">Anda boleh menarik balik kebenaran pada bila-bila masa dalam “Saya & privasi”.</div><button class="button full" data-action="approve-consent">Simpan pilihan dan teruskan</button><button class="button-secondary full" data-action="skip-consent">Terus tanpa sambungan</button></section>`, false);
+    return shell(`${backBar()}<section class="card"><p class="eyebrow">Pengesahan berjaya — simulasi</p><h1>Pilih maklumat yang boleh dilihat</h1><p>Anda tentukan sumber yang boleh dibaca. TenangKITA tidak mengubah permohonan atau rekod.</p>${Object.entries(sources).filter(([id, source]) => !source.future).map(([id, source]) => `<article class="consent-item"><label><input type="checkbox" value="${id}" class="consent-check" ${state.consents.includes(id) ? 'checked' : ''}><span>${source.name}<small>${source.scope}. TenangKITA hanya melihat maklumat yang anda benarkan.</small></span></label></article>`).join('')}<div class="privacy">Anda boleh menarik balik kebenaran pada bila-bila masa dalam “Saya & privasi”.</div><button class="button full" data-action="approve-consent">Simpan pilihan dan teruskan</button><button class="button-secondary full" data-action="skip-consent">Terus tanpa sambungan</button></section>`, false);
   }
 
   function main() {
@@ -337,7 +378,7 @@
   }
 
   function about() {
-    alert('NewTenangKITA v0.4 ialah prototaip inklusif. MyDigital ID, data manfaat dan sokongan OKU adalah simulasi atau pautan panduan. Harga sebenar tidak dipaparkan; kalkulator menghasilkan anggaran pada peranti. Tiada kelayakan, baki atau transaksi sebenar diproses.');
+    alert('NewTenangKITA v0.5 ialah prototaip inklusif dengan lapisan sumber rasmi. MyDigital ID, data manfaat dan sokongan OKU adalah simulasi atau pautan panduan. Harga sebenar tidak dipaparkan; kalkulator menghasilkan anggaran pada peranti. Tiada kelayakan, baki atau transaksi sebenar diproses.');
   }
 
   function navigate(route, tab = state.tab, replace = false) {
@@ -458,6 +499,28 @@
         utterance.lang = 'ms-MY';
         utterance.rate = 0.9;
         speechSynthesis.speak(utterance);
+      };
+    });
+    document.querySelectorAll('[data-action="load-opendosm"]').forEach(element => {
+      element.onclick = async () => {
+        state.dosmStatus = 'loading';
+        state.dosmError = '';
+        render();
+        try {
+          const response = await fetch('https://api.data.gov.my/opendosm?id=cpi_state&limit=3', { headers: { accept: 'application/json' } });
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          const data = await response.json();
+          state.dosmRows = Array.isArray(data) ? data : (Array.isArray(data.data) ? data.data : []);
+          state.dosmStatus = state.dosmRows.length ? 'ready' : 'error';
+          state.dosmError = state.dosmRows.length ? '' : 'Respons API tidak mempunyai rekod yang boleh dipaparkan';
+          state.dosmUpdatedAt = new Date().toLocaleString('ms-MY');
+        } catch (error) {
+          state.dosmStatus = 'error';
+          state.dosmRows = [];
+          state.dosmError = error.message || 'Sambungan gagal';
+          state.dosmUpdatedAt = new Date().toLocaleString('ms-MY');
+        }
+        render();
       };
     });
     document.querySelectorAll('[data-action="about-demo"]').forEach(element => {
