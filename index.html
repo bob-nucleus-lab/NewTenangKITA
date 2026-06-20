@@ -1,19 +1,43 @@
 <!doctype html>
 <html lang="ms">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#1d4ed8">
-  <meta name="description" content="NewTenangKITA v0.7.2 — prototaip GitHub yang lebih ringkas, empatik, praktikal dan mesra OKU.">
-  <title>NewTenangKITA v0.7.2</title>
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="src/styles.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#2563eb" />
+  <title>NewTenangKITA</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <a class="skip-link" href="#main">Langkau ke kandungan utama</a>
-  <div id="app" class="app-shell" aria-live="polite"></div>
-  <noscript>Aplikasi ini memerlukan JavaScript untuk memaparkan prototaip interaktif.</noscript>
-  <script src="src/app.js" defer></script>
+  <a class="skip-link" href="#app">Langkau ke kandungan</a>
+  <div class="shell" id="shell">
+    <header class="topbar" role="banner">
+      <button class="icon-btn" id="backBtn" aria-label="Kembali" hidden>←</button>
+      <div>
+        <div class="brand-row">
+          <span class="brand-mark" aria-hidden="true">TK</span>
+          <span class="brand">NewTenangKITA</span>
+        </div>
+        <p class="tagline">Faham. Semak. Bertindak.</p>
+      </div>
+      <button class="quiet-btn" id="easyBtn" type="button">Paparan Mudah</button>
+    </header>
+
+    <main id="app" class="app" tabindex="-1" aria-live="polite"></main>
+
+    <nav class="bottom-nav" aria-label="Navigasi utama">
+      <button data-tab="home" class="nav-item is-active"><span>Utama</span></button>
+      <button data-tab="help" class="nav-item"><span>Bantuan</span></button>
+      <button data-tab="needs" class="nav-item"><span>Keperluan</span></button>
+      <button data-tab="access" class="nav-item"><span>Akses</span></button>
+      <button data-tab="me" class="nav-item"><span>Saya</span></button>
+    </nav>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
 </body>
 </html>

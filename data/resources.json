@@ -1,0 +1,51 @@
+[
+  {
+    "title": "OpenDOSM",
+    "owner": "DOSM / data.gov.my",
+    "type": "API rasmi",
+    "status": "Mikro-integrasi v0.8",
+    "url": "https://developer.data.gov.my/static-api/opendosm"
+  },
+  {
+    "title": "PriceCatcher",
+    "owner": "KPDN / DOSM",
+    "type": "Dataset rasmi",
+    "status": "Perlu adapter/cache",
+    "url": "https://data.gov.my/data-catalogue/pricecatcher"
+  },
+  {
+    "title": "STR",
+    "owner": "LHDNM / MOF",
+    "type": "Portal rasmi",
+    "status": "Pautan rasmi",
+    "url": "https://bantuantunai.hasil.gov.my/"
+  },
+  {
+    "title": "SARA",
+    "owner": "MOF / MyKasih",
+    "type": "Portal rasmi",
+    "status": "Pautan rasmi",
+    "url": "https://sara.gov.my/"
+  },
+  {
+    "title": "MyDigital ID",
+    "owner": "My Digital ID Sdn. Bhd.",
+    "type": "Identiti",
+    "status": "Simulasi handoff",
+    "url": "https://www.digital-id.my/en/support"
+  },
+  {
+    "title": "PADU",
+    "owner": "Pemilik sistem PADU",
+    "type": "Masa hadapan",
+    "status": "Consent-based",
+    "url": "https://padu.gov.my/"
+  },
+  {
+    "title": "Talian Kasih",
+    "owner": "KPWKM",
+    "type": "Bantuan manusia",
+    "status": "Telefon / WhatsApp",
+    "url": "https://www.malaysia.gov.my/my/categories/keselamatan-undang-undang/golongan-rentan/talian-kasih-15999"
+  }
+]

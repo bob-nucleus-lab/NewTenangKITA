@@ -1,25 +1,16 @@
-# NewTenangKITA v0.7.2 — Citizen Screen Simplification
+# Release Notes — NewTenangKITA v0.8
 
-## Purpose
+## Theme
+OpenDOSM Micro-Integration & Verified Resource Clean-up.
 
-Keep empathy and trust, but make the app feel lighter, clearer and more practical for citizens.
+## Added
+- A real browser-side OpenDOSM API test using `https://api.data.gov.my/opendosm?id=cpi_core&limit=3`.
+- Amanah Data source cards for OpenDOSM, PriceCatcher, STR, SARA, MyDigital ID, PADU and Talian Kasih.
+- More compact citizen screens with explanation moved into secondary pages.
+- Explicit PriceCatcher future adapter/cache explanation without displaying fake prices.
 
-## Changes
-
-- Shortened Welcome, Guest Home and logged-in Home copy
-- Reduced visible explanation on main screens
-- Kept only one primary action at the top of Home
-- Moved status/profile details into an expandable section
-- Shortened MyDigital ID handoff wording
-- Shortened consent wording while keeping source-by-source consent
-- Made Akses support cleaner and moved longer support explanation into secondary flows
-- Kept Amanah Data and Status Prototaip as the home for deeper governance explanation
-
-## Not changed
-
-- No real MyDigital ID login
-- No PADU integration
-- No real SARA, STR or BUDI95 retrieval
-- No PriceCatcher live adapter
-- No database or backend
-- No scoring, false eligibility or fabricated prices
+## Preserved
+- Empathy-first, citizen-centric flow.
+- OKU-friendly access, caregiver mode, Paparan Mudah, large text, high contrast and read-aloud.
+- GitHub-only, no database, no backend and no personal data boundary.
+- No scoring, no false eligibility and no fabricated balances.

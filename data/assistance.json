@@ -1,0 +1,30 @@
+[
+  {
+    "id": "str",
+    "title": "Sumbangan Tunai Rahmah (STR)",
+    "category": "Sara hidup",
+    "owner": "LHDNM / MOF",
+    "url": "https://bantuantunai.hasil.gov.my/"
+  },
+  {
+    "id": "sara",
+    "title": "Sumbangan Asas Rahmah (SARA)",
+    "category": "Sara hidup",
+    "owner": "MOF / MyKasih",
+    "url": "https://sara.gov.my/"
+  },
+  {
+    "id": "budi95",
+    "title": "BUDI95 / subsidi petrol",
+    "category": "Pengangkutan",
+    "owner": "MOF / pemilik sistem berkaitan",
+    "url": ""
+  },
+  {
+    "id": "oku",
+    "title": "Sokongan OKU dan penjaga",
+    "category": "OKU / Kebajikan",
+    "owner": "JKM / KPWKM",
+    "url": "https://www.malaysia.gov.my/my/categories/keselamatan-undang-undang/golongan-rentan/talian-kasih-15999"
+  }
+]

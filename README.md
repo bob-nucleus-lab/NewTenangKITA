@@ -1,41 +1,25 @@
-# NewTenangKITA v0.7.2
+# NewTenangKITA v0.8
 
-Citizen screen simplification release for the GitHub-only prototype. This version keeps the NewTenangKITA elements while reducing visible text on main citizen screens.
+Track reminder:
 
-## Product compass
+> NewTenangKITA is a trusted, empathetic and practical citizen support layer for Malaysians — including OKU, elderly citizens, caregivers and low digital-literacy users — that helps people understand official information and take one useful action at a time.
 
-NewTenangKITA is a trusted, empathetic and practical citizen support layer for Malaysians — including OKU, elderly citizens, caregivers and low digital-literacy users — that helps people understand official information and take one useful action at a time.
+## Current prototype boundary
 
-## What stays
+- GitHub Pages only
+- No database
+- No backend
+- No personal citizen data
+- No real SARA, STR, BUDI95 or PADU integration
+- OpenDOSM micro-test only for public context
+- PriceCatcher remains an adapter/cache future state
 
-- Guest access with no assumed profile
-- OKU-friendly Akses tab
-- Paparan Mudah, larger text, high contrast and read-aloud
-- Caregiver mode and human-support routes
-- MyDigital ID handoff simulation without passwords
-- SARA, BUDI95 and STR consent demo
-- OpenDOSM readiness and verified resource registry
-- PADU as future consent-based readiness only
-- No citizen scoring, no fabricated prices and no false eligibility
-- No database, no backend and no personal citizen data
+## v0.8 enhancement
 
-## v0.7.2 UX simplification
-
-- Shortened Welcome and Home screens
-- Moved profile/status details behind expandable sections
-- Shortened MyDigital ID and consent screens
-- Reduced repeated trust explanations
-- Made Akses screen more direct
-- Kept full governance details inside Amanah Data and Status Prototaip
-
-## Run locally
-
-```bash
-python3 -m http.server 8080
-```
-
-Open `http://localhost:8080`.
-
-## Prototype boundary
-
-This version is a static GitHub Pages prototype. It must not collect MyKad numbers, passwords, biometrics or real personal benefit data.
+- OpenDOSM `cpi_core` micro-test card
+- Verified resource clean-up
+- Compact citizen screens
+- Kept OKU-friendly access
+- Kept MyDigital ID as handoff simulation
+- Kept PADU as future consent-based integration
+- No citizen scoring, fabricated prices or false eligibility claims
