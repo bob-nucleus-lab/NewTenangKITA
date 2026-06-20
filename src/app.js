@@ -1,8 +1,8 @@
 (() => {
   'use strict';
 
-  const LOCAL_KEY = 'newtk-v07-preferences';
-  const SESSION_KEY = 'newtk-v07-session';
+  const LOCAL_KEY = 'newtk-v071-preferences';
+  const SESSION_KEY = 'newtk-v071-session';
   const SESSION_MS = 15 * 60 * 1000;
   const defaults = {
     route: 'welcome',
@@ -166,7 +166,7 @@
   }
 
   function phase() {
-    return `<div class="phase"><b>PROTOTAIP v0.7</b> Statik GitHub · tiada pangkalan data · tiada data peribadi rakyat. <a href="#" data-action="about-demo">Ketahui batas prototaip</a></div>`;
+    return `<div class="phase"><b>Prototaip</b> · Tiada data peribadi disimpan · <a href="#" data-action="about-demo">Status</a></div>`;
   }
 
   function top() {
@@ -193,7 +193,7 @@
   }
 
   function welcome() {
-    return shell(`<section class="card hero"><div class="hero-symbol" aria-hidden="true">♥</div><p class="eyebrow">Untuk rakyat Malaysia</p><h1>Apa yang boleh kita ringankan hari ini?</h1><p>TenangKITA membantu anda memahami bantuan, kos harian dan tindakan praktikal tanpa bahasa yang menghukum.</p><div class="button-row"><button class="button full" data-route="concern">Pilih keutamaan saya</button><button class="button-secondary full" data-action="guest">Teroka maklumat umum</button></div></section>${trackReminderPanel()}<section class="card"><h2>Apa yang TenangKITA lakukan</h2><div class="action-list"><article class="action"><span class="action-icon">1</span><div><b>Ringkaskan keadaan</b><small>Tunjukkan perkara paling penting dahulu.</small></div></article><article class="action"><span class="action-icon">2</span><div><b>Cadangkan tindakan kecil</b><small>Fokus pada apa yang boleh dibuat hari ini atau minggu ini.</small></div></article><article class="action"><span class="action-icon">3</span><div><b>Hubungkan sumber rasmi</b><small>Anda mengawal sumber yang disambungkan.</small></div></article></div></section><section class="card secondary-card"><h2>Direka untuk semua</h2><p>Termasuk warga emas, OKU, penjaga, pengguna pembaca skrin dan rakyat yang mahu bantuan manusia, bukan hanya perkhidmatan digital.</p><button class="button-secondary full" data-tab-jump="access">Tetapkan keperluan akses</button></section>`, false);
+    return shell(`<section class="card hero"><div class="hero-symbol" aria-hidden="true">♥</div><p class="eyebrow">Untuk rakyat Malaysia</p><h1>Apa yang boleh kita ringankan hari ini?</h1><p>Faham bantuan, semak sumber rasmi dan ambil satu tindakan kecil.</p><div class="button-row"><button class="button full" data-route="concern">Pilih keutamaan saya</button><button class="button-secondary full" data-action="guest">Teroka tanpa log masuk</button></div><div class="trust-strip"><span>Tanpa skor</span><span>Mesra OKU</span><span>Semak rasmi</span></div></section><section class="card"><h2>Apa yang TenangKITA lakukan</h2><div class="action-list"><article class="action"><span class="action-icon">1</span><div><b>Ringkaskan</b><small>Tunjukkan perkara penting dahulu.</small></div></article><article class="action"><span class="action-icon">2</span><div><b>Sediakan tindakan</b><small>Checklist, dokumen dan saluran rasmi.</small></div></article><article class="action"><span class="action-icon">3</span><div><b>Bantu semua pengguna</b><small>Paparan mudah, OKU, penjaga dan bantuan manusia.</small></div></article></div></section><section class="card secondary-card"><h2>Akses lebih selesa</h2><p>Pilih paparan mudah, teks besar, kontras tinggi atau mod penjaga.</p><button class="button-secondary full" data-tab-jump="access">Tetapkan akses</button></section>`, false);
   }
 
   function concern() {
@@ -203,7 +203,7 @@
   }
 
   function guestHome() {
-    return `<section class="card hero"><p class="eyebrow">Teroka tanpa log masuk</p><h1>Mulakan dengan maklumat umum.</h1><p>Tiada lokasi, saiz isi rumah atau identiti diandaikan untuk anda.</p><button class="button" data-route="concern">Pilih keutamaan jika mahu</button></section><section class="card"><h2>Boleh dibuat sekarang</h2><div class="action-list"><article class="action"><span class="action-icon">1</span><div><b>Teroka bantuan awam</b><small>Lihat SARA, STR dan program lain tanpa menentukan kelayakan.</small></div></article><button class="action action-button" data-route="data-trust"><span class="action-icon">2</span><span><b>Semak sumber rasmi</b><small>Lihat OpenDOSM, PriceCatcher, PADU dan had data.</small></span><span class="action-arrow" aria-hidden="true">›</span></button><article class="action"><span class="action-icon">3</span><div><b>Dapatkan bantuan manusia</b><small>Saluran bantuan kekal tersedia tanpa pengesahan identiti.</small></div></article></div></section>`;
+    return `<section class="card hero"><p class="eyebrow">Teroka tanpa log masuk</p><h1>Mulakan dengan maklumat umum.</h1><p>Tiada lokasi, isi rumah atau identiti diandaikan.</p><button class="button" data-route="concern">Pilih keutamaan jika mahu</button></section><section class="card"><h2>Boleh dibuat sekarang</h2><div class="action-list"><button class="action action-button" data-tab-jump="benefits"><span class="action-icon">1</span><span><b>Teroka bantuan awam</b><small>Senarai bantuan dan checklist asas.</small></span><span class="action-arrow" aria-hidden="true">›</span></button><button class="action action-button" data-route="data-trust"><span class="action-icon">2</span><span><b>Semak sumber</b><small>Apa yang rasmi, demo atau belum disambung.</small></span><span class="action-arrow" aria-hidden="true">›</span></button><button class="action action-button" data-route="urgent"><span class="action-icon">3</span><span><b>Bantuan manusia</b><small>Telefon, WhatsApp dan saluran kecemasan.</small></span><span class="action-arrow" aria-hidden="true">›</span></button></div></section>`;
   }
 
   function home() {
@@ -256,11 +256,11 @@
   function benefitDiscovery() {
     const mapped = { groceries: 'living', fuel: 'transport', bills: 'housing', children: 'education', income: 'work' }[state.concern];
     const ordered = [...benefitCatalog].sort((a, b) => Number(b.need === mapped) - Number(a.need === mapped));
-    return `<section class="card"><p class="eyebrow">Teroka tanpa log masuk</p><h2>Katalog bantuan Malaysia</h2><p>Senarai ini membantu anda bersedia. Ia tidak mengesahkan kelayakan atau bayaran.</p><div class="service-principles">${servicePrinciples.map(([title, text]) => `<article><b>${title}</b><small>${text}</small></article>`).join('')}</div><div class="catalog">${ordered.map((item, idx) => `<article class="catalog-item"><div><span class="tag official">Pautan rasmi</span><span class="tag">${item.category}</span>${item.need === mapped ? '<span class="tag relevant">Berkaitan pilihan anda</span>' : ''}<h3>${item.name}</h3><p>${item.summary}</p></div><details class="prep" ${idx < 2 ? 'open' : ''}><summary>Sebelum membuka portal</summary><p>Sediakan jika berkaitan:</p><ul>${item.prep.map(entry => `<li>${entry}</li>`).join('')}</ul><small>${item.help}</small></details><div class="truth-row"><span><b>Pemilik</b>${item.owner}</span><span><b>Keputusan</b>Oleh agensi</span></div><div class="inline-actions"><a class="button-secondary" href="${item.url}" target="_blank" rel="noopener noreferrer">Buka portal rasmi</a><button class="text-button" data-print-checklist="${idx}">Cetak / simpan checklist</button></div></article>`).join('')}</div></section>${stateProgrammeLayer()}`;
+    return `<section class="card"><p class="eyebrow">Teroka tanpa log masuk</p><h2>Katalog bantuan Malaysia</h2><p>Pilih bantuan. TenangKITA bantu sediakan checklist, bukan menentukan kelayakan.</p><details class="prep compact"><summary>Cara maklumat dijaga</summary><div class="service-principles">${servicePrinciples.map(([title, text]) => `<article><b>${title}</b><small>${text}</small></article>`).join('')}</div></details><div class="catalog">${ordered.map((item, idx) => `<article class="catalog-item"><div><span class="tag official">Pautan rasmi</span><span class="tag">${item.category}</span>${item.need === mapped ? '<span class="tag relevant">Berkaitan pilihan anda</span>' : ''}<h3>${item.name}</h3><p>${item.summary}</p></div><details class="prep" ${idx === 0 ? 'open' : ''}><summary>Apa perlu sediakan</summary><p>Sediakan jika berkaitan:</p><ul>${item.prep.map(entry => `<li>${entry}</li>`).join('')}</ul><small>${item.help}</small></details><div class="truth-row"><span><b>Pemilik</b>${item.owner}</span><span><b>Keputusan</b>Oleh agensi</span></div><div class="inline-actions"><a class="button-secondary" href="${item.url}" target="_blank" rel="noopener noreferrer">Buka portal rasmi</a><button class="text-button" data-print-checklist="${idx}">Simpan checklist</button></div></article>`).join('')}</div></section>${stateProgrammeLayer()}`;
   }
 
   function stateProgrammeLayer() {
-    return `<section class="card secondary-card"><p class="eyebrow">Program negeri & sektor</p><h2>Jangan reka syarat. Semak sumber rasmi.</h2><p>Program bantuan boleh berubah mengikut negeri, agensi dan tahun. NewTenangKITA v0.7 hanya menyediakan checklist dan pautan selamat sehingga sumber disahkan.</p><div class="action-list">${stateProgrammeNotes.map((note, index) => `<article class="action"><span class="action-icon">${index + 1}</span><div><b>${index === 0 ? 'Sahkan pemilik sumber' : index === 1 ? 'Semak tarikh' : index === 2 ? 'Gunakan pautan rasmi' : 'Sediakan pembetulan'}</b><small>${note}</small></div></article>`).join('')}</div><div class="truth-note"><b>Status: readiness</b><span>Direka untuk diisi dengan registry rasmi, bukan crawler bebas tanpa kawalan.</span></div></section>`;
+    return `<section class="card secondary-card"><p class="eyebrow">Program negeri & sektor</p><h2>Semak sumber rasmi.</h2><p>Bantuan boleh berubah mengikut negeri dan agensi.</p><details class="prep"><summary>Peraturan keselamatan maklumat</summary><ul>${stateProgrammeNotes.map(note => `<li>${note}</li>`).join('')}</ul></details><div class="truth-note"><b>Status: readiness</b><span>Diisi hanya dengan sumber rasmi yang disahkan.</span></div></section>`;
   }
 
   function publicBenefits() {
@@ -312,14 +312,14 @@
 
   function accessCentre() {
     const options = [
-      ['largeText','Saya kurang jelas melihat teks','Saiz teks lebih besar'],
-      ['highContrast','Saya perlukan kontras lebih jelas','Kontras tinggi'],
-      ['simpleMode','Saya sukar membaca ayat panjang','Paparan mudah'],
-      ['screenReader','Saya menggunakan pembaca skrin','Label dan susunan mesra pembaca skrin'],
-      ['bigButtons','Saya perlukan butang lebih besar','Sasaran sentuh lebih besar'],
-      ['caregiver','Saya membantu ahli keluarga','Mod penjaga']
+      ['largeText','Teks lebih besar','Untuk bacaan lebih jelas'],
+      ['highContrast','Kontras tinggi','Warna lebih jelas'],
+      ['simpleMode','Paparan mudah','Kurangkan teks dan kad'],
+      ['screenReader','Pembaca skrin','Susunan dan label lebih jelas'],
+      ['bigButtons','Butang lebih besar','Lebih mudah disentuh'],
+      ['caregiver','Saya membantu ahli keluarga','Gunakan dengan izin mereka']
     ];
-    return `<section class="card hero"><p class="eyebrow">Keperluan akses saya</p><h1>Gunakan TenangKITA dengan cara yang selesa.</h1><p>Bahagian ini pilihan. Anda tidak perlu menyatakan OKU untuk mendapatkan maklumat umum.</p><div class="access-grid">${options.map(([id,label,short]) => `<button class="access-choice ${isAccessOn(id) ? 'selected' : ''}" data-access="${id}" aria-pressed="${isAccessOn(id)}"><b>${label}</b><small>${short}</small></button>`).join('')}</div><div class="notice">Tetapan ini disimpan pada peranti ini sahaja dalam prototaip.</div></section><section class="card"><h2>Sokongan OKU & penjaga</h2><p>TenangKITA boleh bantu anda bersedia sebelum membuka portal rasmi atau menghubungi agensi.</p><div class="button-row"><button class="button full" data-open-need="oku">Lihat panduan OKU & penjaga</button><button class="button-secondary full" data-route="access-statement">Lihat pernyataan akses</button></div></section>${humanSupport(true)}`;
+    return `<section class="card hero"><p class="eyebrow">Keperluan akses saya</p><h1>Gunakan cara yang paling selesa.</h1><p>Pilihan ini tidak memerlukan anda menyatakan OKU.</p><div class="access-grid">${options.map(([id,label,short]) => `<button class="access-choice ${isAccessOn(id) ? 'selected' : ''}" data-access="${id}" aria-pressed="${isAccessOn(id)}"><b>${label}</b><small>${short}</small></button>`).join('')}</div><div class="notice">Disimpan pada peranti ini sahaja.</div></section><section class="card"><h2>Sokongan OKU & penjaga</h2><p>Checklist dan saluran manusia sebelum membuka portal rasmi.</p><div class="button-row"><button class="button full" data-open-need="oku">Lihat panduan</button><button class="button-secondary full" data-route="access-statement">Pernyataan akses</button></div></section>${humanSupport(true)}`;
   }
 
   function isAccessOn(id) {
@@ -331,7 +331,7 @@
   }
 
   function accessStatement() {
-    return shell(`${backBar()}<section class="card"><p class="eyebrow">Pernyataan akses</p><h1>TenangKITA untuk semua rakyat.</h1><p>Prototaip ini direka untuk menyokong pengguna OKU, warga emas, penjaga dan rakyat yang kurang yakin menggunakan perkhidmatan digital.</p><ul class="plain-list"><li>Maklumat penting tidak bergantung pada warna sahaja.</li><li>Setiap perjalanan penting mempunyai pilihan bantuan manusia.</li><li>Maklumat peribadi dan manfaat hanya dipaparkan selepas pengesahan dan kebenaran.</li><li>Mod penjaga menekankan izin individu yang dibantu.</li><li>Paparan mudah, teks besar, kontras tinggi dan bacaan suara disediakan sebagai sokongan awal.</li></ul><div class="truth-note"><b>Status: prototaip</b><span>Ujian kebolehgunaan bersama komuniti OKU perlu dibuat sebelum pilot awam.</span></div></section>`, false);
+    return shell(`${backBar()}<section class="card"><p class="eyebrow">Pernyataan akses</p><h1>TenangKITA untuk semua rakyat.</h1><p>Prototaip ini menyokong OKU, warga emas, penjaga dan pengguna yang kurang yakin menggunakan perkhidmatan digital.</p><ul class="plain-list"><li>Maklumat penting tidak bergantung pada warna sahaja.</li><li>Setiap perjalanan penting ada pilihan bantuan manusia.</li><li>Maklumat peribadi hanya dipaparkan selepas pengesahan dan kebenaran.</li><li>Paparan mudah, teks besar, kontras tinggi dan bacaan suara disediakan.</li></ul><div class="truth-note"><b>Status: prototaip</b><span>Ujian kebolehgunaan OKU diperlukan sebelum pilot awam.</span></div></section>`, false);
   }
 
   function humanSupport(includeJkm = false) {
@@ -343,48 +343,47 @@
   }
 
   function me() {
-    return `<section class="card"><h1>Saya & privasi</h1><div class="privacy"><b>Status prototaip:</b> Tiada pangkalan data. Pilihan disimpan pada peranti ini sahaja.</div><div class="setting-row"><div><b>Keperluan akses</b><small>Teks besar, kontras, paparan mudah, pembaca skrin atau mod penjaga.</small></div><button class="button-secondary" data-tab-jump="access">Urus</button></div><div class="setting-row"><div><b>Paparan mudah</b><small>Kurangkan maklumat dan tunjuk tindakan utama.</small></div><button class="button-secondary" data-action="toggle-simple">${state.simpleMode ? 'Tutup' : 'Aktifkan'}</button></div><div class="setting-row"><div><b>Saiz teks lebih besar</b><small>Mudahkan pembacaan pada peranti kecil.</small></div><button class="button-secondary" data-action="toggle-text">${state.largeText ? 'Tutup' : 'Aktifkan'}</button></div><div class="setting-row"><div><b>Kontras tinggi</b><small>Tambah kejelasan untuk sesetengah pengguna.</small></div><button class="button-secondary" data-action="toggle-contrast">${state.highContrast ? 'Tutup' : 'Aktifkan'}</button></div><div class="setting-row"><div><b>Mod penjaga</b><small>${state.caregiverMode ? 'Aktif: gunakan maklumat dengan izin individu dibantu.' : 'Untuk membantu ahli keluarga dengan izin mereka.'}</small></div><button class="button-secondary" data-action="toggle-caregiver">${state.caregiverMode ? 'Tutup' : 'Aktifkan'}</button></div><div class="setting-row"><div><b>Bacakan halaman</b><small>Gunakan suara yang tersedia pada peranti.</small></div><button class="button-secondary" data-action="read-page">Dengar</button></div><div class="setting-row"><div><b>Keutamaan utama</b><small>${state.concern ? concerns[state.concern].label : 'Belum dipilih'}</small></div><button class="text-button" data-route="concern">Tukar</button></div><div class="setting-row"><div><b>Status identiti</b><small>${state.verified ? 'Pengesahan simulasi aktif' : 'Belum disahkan'}</small></div><span class="tag ${state.verified ? 'connected' : ''}">${state.verified ? 'Demo aktif' : 'Tetamu'}</span></div>${state.verified ? `<button class="button-secondary full" data-action="logout">Keluar daripada sesi demo</button>` : ''}</section><section class="card secondary-card"><h2>Sumber & ketelusan</h2><p>Lihat dari mana maklumat datang, cara ia digunakan dan batasnya.</p><button class="button-secondary full" data-route="data-trust">Lihat sumber & kaedah</button></section><section class="card secondary-card"><h2>Pusat kebenaran</h2>${Object.entries(sources).filter(([id, source]) => !source.future).map(([id, source]) => `<div class="setting-row"><div><b>${source.name}</b><small>${state.consents.includes(id) ? 'Kebenaran melihat maklumat aktif' : 'Tidak disambungkan'}</small></div>${state.consents.includes(id) ? `<button class="text-button" data-disconnect="${id}">Tarik balik</button>` : '<span class="tag">Tiada akses</span>'}</div>`).join('')}</section><section class="card secondary-card"><h2>Kawalan data</h2><p>Pilihan umum disimpan pada peranti ini. Pengesahan dan kebenaran tamat bersama sesi.</p><button class="button-secondary danger-button full" data-action="reset">Padam semua data prototaip</button></section>`;
+    return `<section class="card"><h1>Saya & privasi</h1><div class="privacy"><b>Status:</b> Prototaip statik. Tiada pangkalan data dan tiada data peribadi rakyat disimpan.</div><div class="setting-row"><div><b>Paparan mudah</b><small>Kurangkan teks dan tunjuk tindakan utama.</small></div><button class="button-secondary" data-action="toggle-simple">${state.simpleMode ? 'Tutup' : 'Aktifkan'}</button></div><div class="setting-row"><div><b>Saiz teks</b><small>Besarkan teks pada peranti kecil.</small></div><button class="button-secondary" data-action="toggle-text">${state.largeText ? 'Tutup' : 'Aktifkan'}</button></div><div class="setting-row"><div><b>Kontras tinggi</b><small>Tambah kejelasan visual.</small></div><button class="button-secondary" data-action="toggle-contrast">${state.highContrast ? 'Tutup' : 'Aktifkan'}</button></div><div class="setting-row"><div><b>Mod penjaga</b><small>${state.caregiverMode ? 'Aktif dengan izin individu dibantu.' : 'Untuk membantu ahli keluarga dengan izin.'}</small></div><button class="button-secondary" data-action="toggle-caregiver">${state.caregiverMode ? 'Tutup' : 'Aktifkan'}</button></div><div class="setting-row"><div><b>Bacakan halaman</b><small>Guna suara pada peranti.</small></div><button class="button-secondary" data-action="read-page">Dengar</button></div><div class="setting-row"><div><b>Keutamaan utama</b><small>${state.concern ? concerns[state.concern].label : 'Belum dipilih'}</small></div><button class="text-button" data-route="concern">Tukar</button></div><div class="setting-row"><div><b>Status identiti</b><small>${state.verified ? 'Pengesahan simulasi aktif' : 'Tetamu'}</small></div><span class="tag ${state.verified ? 'connected' : ''}">${state.verified ? 'Demo aktif' : 'Tetamu'}</span></div>${state.verified ? `<button class="button-secondary full" data-action="logout">Keluar daripada sesi demo</button>` : ''}</section><section class="card secondary-card"><h2>Sumber & ketelusan</h2><p>Semak sumber, batas data dan status prototaip.</p><div class="button-row"><button class="button-secondary full" data-route="data-trust">Amanah Data</button><button class="button-secondary full" data-route="prototype-status">Status prototaip</button></div></section><section class="card secondary-card"><h2>Pusat kebenaran</h2>${Object.entries(sources).filter(([id, source]) => !source.future).map(([id, source]) => `<div class="setting-row"><div><b>${source.name}</b><small>${state.consents.includes(id) ? 'Kebenaran demo aktif' : 'Tidak disambungkan'}</small></div>${state.consents.includes(id) ? `<button class="text-button" data-disconnect="${id}">Tarik balik</button>` : '<span class="tag">Tiada akses</span>'}</div>`).join('')}</section><section class="card secondary-card"><h2>Kawalan data</h2><p>Pilihan umum disimpan pada peranti ini sahaja.</p><button class="button-secondary danger-button full" data-action="reset">Padam data prototaip</button></section>`;
   }
 
-
   function trackReminderPanel() {
-    return `<section class="card track-card"><p class="eyebrow">Arah produk</p><h2>Bukan dashboard yang menilai rakyat.</h2><p>NewTenangKITA ialah lapisan sokongan rakyat yang dipercayai, empatik dan praktikal untuk membantu rakyat Malaysia memahami maklumat rasmi dan mengambil satu tindakan berguna pada satu masa.</p><div class="trust-pills"><span>Empati</span><span>Benar</span><span>Praktikal</span><span>OKU-friendly</span><span>Tanpa pangkalan data</span></div></section>`;
+    return `<section class="card track-card"><p class="eyebrow">Arah produk</p><h2>Membantu, bukan menilai.</h2><p>NewTenangKITA membantu rakyat faham, semak dan bertindak — satu langkah pada satu masa.</p><div class="trust-pills"><span>Empati</span><span>Benar</span><span>Praktikal</span><span>OKU-friendly</span></div></section>`;
   }
 
   function prototypeBoundaryPanel() {
     const boundaries = [
       ['Aplikasi semasa', 'Static HTML, CSS, JavaScript dan katalog statik di GitHub Pages.'],
-      ['Storan semasa', 'LocalStorage dan SessionStorage pada peranti sahaja untuk pilihan prototaip.'],
-      ['Tiada pangkalan data', 'Tiada server, tiada rekod pengguna pusat dan tiada penyimpanan data peribadi rakyat.'],
-      ['Integrasi sebenar', 'OpenDOSM, PriceCatcher adapter, PADU, SARA, STR dan BUDI95 memerlukan fasa cloud / AWS selepas persetujuan prinsip.']
+      ['Storan semasa', 'Pilihan paparan disimpan pada peranti sahaja.'],
+      ['Tiada pangkalan data', 'Tiada server, rekod pengguna pusat atau data peribadi rakyat.'],
+      ['Fasa akan datang', 'Cloud/AWS hanya selepas persetujuan prinsip dan kelulusan tadbir urus.']
     ];
-    return `<section class="card boundary-card"><p class="eyebrow">Sempadan prototaip</p><h2>Selamat untuk pembentangan awal.</h2><p>Versi ini membuktikan aliran perkhidmatan dan EA tanpa memproses maklumat peribadi rakyat.</p><div class="source-list">${boundaries.map(([title,text]) => `<article class="source-card"><h3>${title}</h3><p>${text}</p></article>`).join('')}</div></section>`;
+    return `<section class="card boundary-card"><p class="eyebrow">Status prototaip</p><h2>GitHub sahaja untuk pembentangan.</h2><p>Versi ini membuktikan aliran perkhidmatan tanpa memproses maklumat peribadi rakyat.</p><div class="source-list">${boundaries.map(([title,text]) => `<article class="source-card compact-card"><h3>${title}</h3><p>${text}</p></article>`).join('')}</div></section>`;
   }
 
   function presentationReadinessPanel() {
     const checks = [
-      'Maklumat umum boleh digunakan tanpa log masuk.',
-      'MyDigital ID, SARA, STR, BUDI95 dan PADU hanya simulasi atau readiness.',
-      'Tiada skor keluarga, label miskin atau keputusan kelayakan.',
-      'OKU, warga emas, penjaga dan bantuan manusia kekal dalam aliran utama.',
-      'Pangkalan data dan AWS ditanda sebagai future state, bukan skop GitHub prototype.'
+      'Boleh digunakan sebagai tetamu.',
+      'Tiada skor keluarga atau label miskin.',
+      'MyDigital ID, PADU dan manfaat peribadi hanya simulasi/readiness.',
+      'OKU, penjaga dan bantuan manusia kekal dalam aliran utama.',
+      'Database dan AWS ialah future state.'
     ];
-    return `<section class="card secondary-card"><p class="eyebrow">Untuk pembentangan</p><h2>Status yang perlu jelas kepada pengurusan.</h2><ul class="plain-list">${checks.map(item => `<li>${item}</li>`).join('')}</ul></section>`;
+    return `<section class="card secondary-card"><p class="eyebrow">Untuk pembentangan</p><h2>Poin yang perlu jelas.</h2><ul class="plain-list">${checks.map(item => `<li>${item}</li>`).join('')}</ul></section>`;
   }
 
   function dataTrust() {
-    return shell(`${backBar()}<section class="card"><p class="eyebrow">Amanah Data</p><h1>Apa yang diketahui, dan apa yang belum diketahui.</h1><p>TenangKITA hanya menggunakan data untuk memberi panduan. Ia tidak menentukan kelayakan, status ekonomi atau keputusan rasmi.</p><div class="action-list"><article class="action"><span class="action-icon">✓</span><div><b>Apa yang boleh digunakan</b><small>Data terbuka rasmi seperti OpenDOSM untuk konteks negara dan negeri.</small></div></article><article class="action"><span class="action-icon">?</span><div><b>Apa yang belum diketahui</b><small>Profil sebenar keluarga, baki bantuan dan status permohonan tanpa kebenaran anda.</small></div></article><article class="action"><span class="action-icon">!</span><div><b>Apa yang perlu disemak rasmi</b><small>Kelayakan, bayaran, baki, kuota dan keputusan akhir oleh agensi.</small></div></article></div></section>${trackReminderPanel()}${prototypeBoundaryPanel()}${eaServiceLayer()}${opendosmPanel()}${resourceRegistryPanel()}${paduReadinessPanel()}${presentationReadinessPanel()}<section class="card"><h2>Prinsip prototaip</h2><ul class="plain-list"><li>Tidak mengisytiharkan kelayakan bantuan.</li><li>Tidak mereka baki, lokasi acara atau harga sebagai data semasa.</li><li>Membuka portal rasmi untuk pengesahan akhir.</li><li>Mengutamakan tindakan mudah tanpa memalukan pengguna.</li><li>Memastikan OKU, penjaga dan pengguna rendah literasi tidak tertinggal.</li></ul></section>`, false);
+    return shell(`${backBar()}<section class="card"><p class="eyebrow">Amanah Data</p><h1>Rasmi, anggaran atau demo?</h1><p>Setiap maklumat perlu jelas sumber, status dan batasnya.</p><div class="action-list"><article class="action"><span class="action-icon">✓</span><div><b>Data rasmi</b><small>Contoh: OpenDOSM untuk konteks negara atau negeri.</small></div></article><article class="action"><span class="action-icon">?</span><div><b>Belum diketahui</b><small>Baki, status dan profil sebenar tanpa kebenaran anda.</small></div></article><article class="action"><span class="action-icon">!</span><div><b>Semak agensi</b><small>Kelayakan, bayaran dan keputusan akhir.</small></div></article></div></section>${opendosmPanel()}<details class="card details-card"><summary>Sumber rasmi & registry</summary>${resourceRegistryPanel()}${paduReadinessPanel()}</details><details class="card details-card"><summary>EA dan status prototaip</summary>${trackReminderPanel()}${prototypeBoundaryPanel()}${eaServiceLayer()}${presentationReadinessPanel()}</details>`, false);
   }
 
   function eaServiceLayer() {
     const layers = [
-      ['Pengalaman rakyat', 'Keutamaan, paparan mudah, tindakan kecil, bantuan manusia.'],
-      ['Akses inklusif', 'OKU, warga emas, penjaga, teks besar, kontras dan bacaan suara.'],
-      ['Amanah & kebenaran', 'MyDigital ID, persetujuan sumber dan penarikan balik kebenaran.'],
-      ['Perkhidmatan Malaysia', 'Katalog bantuan, checklist, portal rasmi dan alternatif kaunter.'],
-      ['Data rasmi', 'OpenDOSM, PriceCatcher adapter, PADU masa hadapan dan sumber agensi.']
+      ['Pengalaman rakyat', 'Keutamaan, tindakan kecil dan bantuan manusia.'],
+      ['Akses inklusif', 'OKU, warga emas, penjaga, teks besar dan bacaan suara.'],
+      ['Amanah & kebenaran', 'MyDigital ID, persetujuan sumber dan penarikan balik.'],
+      ['Perkhidmatan Malaysia', 'Katalog bantuan, checklist dan portal rasmi.'],
+      ['Data rasmi', 'OpenDOSM, PriceCatcher adapter dan PADU masa hadapan.']
     ];
-    return `<section class="card secondary-card"><p class="eyebrow">EA dalam aplikasi</p><h2>Setiap fungsi mesti ada lapisan amanah.</h2><div class="source-list">${layers.map(([title, text]) => `<article class="source-card"><h3>${title}</h3><p>${text}</p></article>`).join('')}</div></section>`;
+    return `<section class="card secondary-card"><p class="eyebrow">EA dalam aplikasi</p><h2>Lapisan ringkas.</h2><div class="source-list">${layers.map(([title, text]) => `<article class="source-card compact-card"><h3>${title}</h3><p>${text}</p></article>`).join('')}</div></section>`;
   }
 
   function opendosmPanel() {
@@ -394,16 +393,16 @@
       ready: 'Data berjaya dimuatkan',
       error: 'Tidak dapat dimuatkan'
     }[state.dosmStatus] || 'Belum dimuatkan';
-    const rows = state.dosmRows.length ? state.dosmRows.slice(0, 3).map(row => `<article class="source-card"><div><h3>${escapeText(row.dataset || row.id || 'OpenDOSM')}</h3><span class="tag official">Rasmi</span></div><p>${escapeText(row.date || row.period || row.year || 'Rekod diterima daripada API')}</p><small>${escapeText(JSON.stringify(row).slice(0, 170))}${JSON.stringify(row).length > 170 ? '…' : ''}</small></article>`).join('') : `<div class="truth-note"><b>Belum ada data dipaparkan</b><span>Tekan butang di bawah untuk menguji sambungan API. Jika gagal, prototaip masih membuka dokumentasi rasmi.</span></div>`;
-    return `<section class="card"><p class="eyebrow">OpenDOSM</p><h2>Konteks rasmi, bukan penilaian keluarga.</h2><p>Data OpenDOSM membantu menerangkan perubahan kos atau keadaan ekonomi. Ia tidak cukup untuk menilai keadaan sebenar isi rumah seseorang.</p><div class="truth-row"><span><b>Status</b>${statusText}</span><span><b>Kemas kini aplikasi</b>${state.dosmUpdatedAt || 'Belum dicuba'}</span></div><div class="source-list">${rows}</div>${state.dosmError ? `<div class="notice"><b>API tidak dapat dicapai:</b> ${escapeText(state.dosmError)}. Gunakan pautan rasmi sebagai sandaran.</div>` : ''}<div class="button-row"><button class="button full" data-action="load-opendosm">Cuba muat OpenDOSM</button><a class="button-secondary full" href="https://developer.data.gov.my/static-api/opendosm" target="_blank" rel="noopener noreferrer">Buka dokumentasi OpenDOSM</a></div><details class="prep"><summary>Dataset yang dicadangkan</summary><ul>${opendosmDatasets.map(item => `<li><b>${item.label}</b> — ${item.purpose}</li>`).join('')}</ul></details></section>`;
+    const rows = state.dosmRows.length ? state.dosmRows.slice(0, 3).map(row => `<article class="source-card"><div><h3>${escapeText(row.dataset || row.id || 'OpenDOSM')}</h3><span class="tag official">Rasmi</span></div><p>${escapeText(row.date || row.period || row.year || 'Rekod diterima daripada API')}</p><details class="prep compact"><summary>Lihat respons ringkas</summary><small>${escapeText(JSON.stringify(row).slice(0, 170))}${JSON.stringify(row).length > 170 ? '…' : ''}</small></details></article>`).join('') : `<div class="truth-note"><b>Belum ada data dipaparkan</b><span>Tekan butang untuk menguji API, atau buka dokumentasi rasmi.</span></div>`;
+    return `<section class="card"><p class="eyebrow">OpenDOSM</p><h2>Konteks rasmi, bukan penilaian keluarga.</h2><div class="truth-row"><span><b>Status</b>${statusText}</span><span><b>Kemas kini</b>${state.dosmUpdatedAt || 'Belum dicuba'}</span></div><div class="source-list">${rows}</div>${state.dosmError ? `<div class="notice"><b>API tidak dapat dicapai:</b> ${escapeText(state.dosmError)}.</div>` : ''}<div class="button-row"><button class="button full" data-action="load-opendosm">Cuba muat OpenDOSM</button><a class="button-secondary full" href="https://developer.data.gov.my/static-api/opendosm" target="_blank" rel="noopener noreferrer">Buka dokumentasi</a></div><details class="prep"><summary>Dataset dicadangkan</summary><ul>${opendosmDatasets.map(item => `<li><b>${item.label}</b> — ${item.purpose}</li>`).join('')}</ul></details></section>`;
   }
 
   function resourceRegistryPanel() {
-    return `<section class="card"><p class="eyebrow">Verified Resource Registry</p><h2>Daftar sumber yang dibenarkan.</h2><p>Setiap sumber perlu ada pemilik, kegunaan, status sambungan dan batas sebelum dipaparkan kepada rakyat.</p><div class="source-list">${resourceRegistry.map(item => `<article class="source-card"><div><h3>${item.title}</h3><span class="tag">${item.status}</span></div><p><b>Pemilik:</b> ${item.owner}</p><p><b>Kegunaan:</b> ${item.use}</p><div class="truth-row"><span><b>Jenis</b>${item.type}</span><span><b>Had</b>Perlu semakan rasmi</span></div><a class="button-secondary" href="${item.url}" target="_blank" rel="noopener noreferrer">Buka sumber</a></article>`).join('')}</div></section>`;
+    return `<section class="inner-section"><p class="eyebrow">Verified Resource Registry</p><h2>Sumber yang digunakan.</h2><p>Setiap sumber ada pemilik, kegunaan dan batas.</p><div class="source-list">${resourceRegistry.map(item => `<article class="source-card"><div><h3>${item.title}</h3><span class="tag">${item.status}</span></div><p><b>Pemilik:</b> ${item.owner}</p><details class="prep compact"><summary>Kegunaan & had</summary><p>${item.use}</p><div class="truth-row"><span><b>Jenis</b>${item.type}</span><span><b>Had</b>Semak rasmi</span></div></details><a class="button-secondary" href="${item.url}" target="_blank" rel="noopener noreferrer">Buka sumber</a></article>`).join('')}</div></section>`;
   }
 
   function paduReadinessPanel() {
-    return `<section class="card"><p class="eyebrow">PADU readiness</p><h2>Untuk fasa akan datang, dengan izin khusus.</h2><p>PADU tidak patut digunakan sebagai data terbuka. Ia hanya sesuai sebagai sambungan profil berasaskan kebenaran, selepas MyDigital ID dan kelulusan pemilik sistem.</p><div class="action-list"><article class="action"><span class="action-icon">1</span><div><b>Pengguna memilih untuk sambung PADU</b><small>TenangKITA tetap berguna tanpa PADU.</small></div></article><article class="action"><span class="action-icon">2</span><div><b>Data minimum sahaja</b><small>Contohnya profil isi rumah yang relevan, bukan butiran mentah yang tidak perlu.</small></div></article><article class="action"><span class="action-icon">3</span><div><b>Cadangan yang boleh dijelaskan</b><small>Tiada label miskin, skor, atau keputusan automatik.</small></div></article></div><div class="privacy">PADU tidak disambungkan dalam prototaip ini. Bahagian ini hanya menunjukkan kesediaan EA dan aliran persetujuan masa hadapan.</div></section>`;
+    return `<section class="inner-section"><p class="eyebrow">PADU readiness</p><h2>Fasa akan datang, dengan izin khusus.</h2><p>PADU bukan data terbuka dan tidak disambungkan dalam prototaip ini.</p><div class="truth-note"><b>Prinsip</b><span>Gunakan data minimum, dengan kebenaran pengguna dan kelulusan pemilik sistem.</span></div></section>`;
   }
 
   function escapeText(value) {
@@ -411,7 +410,7 @@
   }
 
   function authIntro() {
-    return shell(`${backBar()}<section class="card"><div class="auth-logo" aria-hidden="true">ID</div><p class="eyebrow">Pengesahan identiti</p><h1>Log masuk melalui MyDigital ID</h1><h2>Mengapa perlu log masuk?</h2><p>Hanya untuk melihat maklumat peribadi seperti baki atau status bantuan. Maklumat umum boleh digunakan tanpa log masuk.</p><div class="privacy"><b>Apa yang TenangKITA terima?</b><br>Pengesahan bahawa anda ialah pengguna yang sah. Kata laluan dan biometrik tidak diberikan kepada TenangKITA.</div><div class="notice">Ini simulasi prototaip. Tiada pengesahan sebenar dilakukan.</div><div class="button-row"><button class="button full" data-route="auth-progress">Teruskan ke simulasi MyDigital ID</button><button class="button-secondary full" data-route="auth-help">Saya tiada aplikasi MyDigital ID</button><button class="text-button full" data-action="return-benefits">Terus tanpa log masuk</button></div></section>`, false);
+    return shell(`${backBar()}<section class="card"><div class="auth-logo" aria-hidden="true">ID</div><p class="eyebrow">Pengesahan identiti</p><h1>Log masuk melalui MyDigital ID</h1><p>Hanya untuk melihat maklumat peribadi seperti baki atau status bantuan.</p><div class="privacy">TenangKITA tidak menerima kata laluan atau biometrik anda.</div><div class="notice">Simulasi prototaip. Tiada pengesahan sebenar dilakukan.</div><div class="button-row"><button class="button full" data-route="auth-progress">Teruskan simulasi</button><button class="button-secondary full" data-route="auth-help">Saya tiada aplikasi MyDigital ID</button><button class="text-button full" data-action="return-benefits">Terus tanpa log masuk</button></div></section>`, false);
   }
 
   function authHelp() {
@@ -431,13 +430,17 @@
     return shell(`${backBar()}<section class="card"><p class="eyebrow">Pengesahan berjaya — simulasi</p><h1>Pilih maklumat yang boleh dilihat</h1><p>Anda tentukan sumber yang boleh dibaca. TenangKITA tidak mengubah permohonan atau rekod.</p>${Object.entries(sources).filter(([id, source]) => !source.future).map(([id, source]) => `<article class="consent-item"><label><input type="checkbox" value="${id}" class="consent-check" ${state.consents.includes(id) ? 'checked' : ''}><span>${source.name}<small>${source.scope}. TenangKITA hanya melihat maklumat yang anda benarkan.</small></span></label></article>`).join('')}<div class="privacy">Anda boleh menarik balik kebenaran pada bila-bila masa dalam “Saya & privasi”.</div><button class="button full" data-action="approve-consent">Simpan pilihan dan teruskan</button><button class="button-secondary full" data-action="skip-consent">Terus tanpa sambungan</button></section>`, false);
   }
 
+  function prototypeStatus() {
+    return shell(`${backBar()}${prototypeBoundaryPanel()}${presentationReadinessPanel()}<section class="card"><h2>Future state</h2><p>Selepas persetujuan prinsip, fasa cloud boleh menambah API gateway, consent, audit log dan integrasi rasmi.</p><div class="truth-note"><b>Sekarang</b><span>GitHub-only, tanpa database dan tanpa data peribadi.</span></div></section>`, false);
+  }
+
   function main() {
     const view = { home, benefits, needs, access: accessCentre, me }[state.tab] || home;
     return shell(view());
   }
 
   function about() {
-    alert('NewTenangKITA v0.7 ialah prototaip statik di GitHub Pages tanpa pangkalan data dan tanpa data peribadi rakyat. Ia membuktikan aliran perkhidmatan, empati, OKU-friendly access, Amanah Data dan EA. MyDigital ID, PADU, SARA, STR dan BUDI95 adalah simulasi/readiness atau pautan rasmi. Selepas persetujuan prinsip, fasa AWS boleh menyokong API gateway, database selamat, consent dan audit.');
+    alert('Prototaip statik di GitHub Pages. Tiada pangkalan data, tiada backend dan tiada data peribadi rakyat disimpan. MyDigital ID, PADU, SARA, STR dan BUDI95 hanya simulasi/readiness atau pautan rasmi.');
   }
 
   function navigate(route, tab = state.tab, replace = false) {
@@ -473,6 +476,7 @@
       'auth-error': authError,
       'auth-help': authHelp,
       'data-trust': dataTrust,
+      'prototype-status': prototypeStatus,
       'access-statement': accessStatement,
       consent,
       main
