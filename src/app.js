@@ -1,8 +1,8 @@
 (() => {
   'use strict';
 
-  const LOCAL_KEY = 'newtk-v072-preferences';
-  const SESSION_KEY = 'newtk-v072-session';
+  const LOCAL_KEY = 'newtk-v081-preferences';
+  const SESSION_KEY = 'newtk-v081-session';
   const SESSION_MS = 15 * 60 * 1000;
   const defaults = {
     route: 'welcome',
@@ -81,7 +81,7 @@
 
 
   const resourceRegistry = [
-    { id: 'opendosm', title: 'OpenDOSM', owner: 'Jabatan Perangkaan Malaysia', type: 'API rasmi terbuka', status: 'Boleh disambung', use: 'Konteks ekonomi dan sosial; bukan keputusan individu.', url: 'https://developer.data.gov.my/static-api/opendosm' },
+    { id: 'opendosm', title: 'OpenDOSM', owner: 'Jabatan Perangkaan Malaysia', type: 'API rasmi terbuka', status: 'Mikro-integrasi', use: 'Konteks ekonomi dan sosial; bukan keputusan individu.', url: 'https://developer.data.gov.my/static-api/opendosm' },
     { id: 'pricecatcher', title: 'PriceCatcher', owner: 'KPDN / DOSM melalui data.gov.my', type: 'Dataset rasmi terbuka', status: 'Perlu adapter/cache', use: 'Harga item di premis; bukan pengganti CPI.', url: 'https://data.gov.my/data-catalogue/pricecatcher' },
     { id: 'pjrm', title: 'Jualan Rahmah', owner: 'KPDN', type: 'Portal rasmi', status: 'Pautan rasmi', use: 'Semak jadual dan lokasi; jangan reka acara.', url: 'https://pjrm.kpdn.gov.my/' },
     { id: 'mydigitalid', title: 'MyDigital ID', owner: 'My Digital ID Sdn. Bhd.', type: 'Identiti digital', status: 'Simulasi prototaip', use: 'Pengesahan identiti; bukan persetujuan automatik data bantuan.', url: 'https://www.digital-id.my/en/support' },
@@ -92,7 +92,8 @@
   ];
 
   const opendosmDatasets = [
-    { id: 'cpi_state', label: 'CPI mengikut negeri', purpose: 'Konteks tekanan harga mengikut negeri.' },
+    { id: 'cpi_core', label: 'Core CPI Overall', purpose: 'Mikro-ujian API OpenDOSM dengan dataset contoh rasmi.' },
+    { id: 'cpi_state', label: 'CPI mengikut negeri', purpose: 'Konteks tekanan harga mengikut negeri apabila dataset digunakan.' },
     { id: 'cpi_lowincome', label: 'CPI isi rumah berpendapatan rendah', purpose: 'Konteks kos yang mungkin lebih terasa kepada isi rumah rentan.' },
     { id: 'hies_state', label: 'Pendapatan & perbelanjaan isi rumah', purpose: 'Penanda aras latar; bukan penilaian keluarga.' }
   ];
@@ -397,8 +398,8 @@
       ready: 'Data berjaya dimuatkan',
       error: 'Tidak dapat dimuatkan'
     }[state.dosmStatus] || 'Belum dimuatkan';
-    const rows = state.dosmRows.length ? state.dosmRows.slice(0, 3).map(row => `<article class="source-card"><div><h3>${escapeText(row.dataset || row.id || 'OpenDOSM')}</h3><span class="tag official">Rasmi</span></div><p>${escapeText(row.date || row.period || row.year || 'Rekod diterima daripada API')}</p><details class="prep compact"><summary>Lihat respons ringkas</summary><small>${escapeText(JSON.stringify(row).slice(0, 170))}${JSON.stringify(row).length > 170 ? '…' : ''}</small></details></article>`).join('') : `<div class="truth-note"><b>Belum ada data dipaparkan</b><span>Tekan butang untuk menguji API, atau buka dokumentasi rasmi.</span></div>`;
-    return `<section class="card"><p class="eyebrow">OpenDOSM</p><h2>Konteks rasmi, bukan penilaian keluarga.</h2><div class="truth-row"><span><b>Status</b>${statusText}</span><span><b>Kemas kini</b>${state.dosmUpdatedAt || 'Belum dicuba'}</span></div><div class="source-list">${rows}</div>${state.dosmError ? `<div class="notice"><b>API tidak dapat dicapai:</b> ${escapeText(state.dosmError)}.</div>` : ''}<div class="button-row"><button class="button full" data-action="load-opendosm">Cuba muat OpenDOSM</button><a class="button-secondary full" href="https://developer.data.gov.my/static-api/opendosm" target="_blank" rel="noopener noreferrer">Buka dokumentasi</a></div><details class="prep"><summary>Dataset dicadangkan</summary><ul>${opendosmDatasets.map(item => `<li><b>${item.label}</b> — ${item.purpose}</li>`).join('')}</ul></details></section>`;
+    const rows = state.dosmRows.length ? state.dosmRows.slice(0, 3).map(row => `<article class="source-card"><div><h3>${escapeText(row.dataset || row.id || 'OpenDOSM')}</h3><span class="tag official">Rasmi</span></div><p>${escapeText(row.date || row.period || row.year || 'Rekod diterima daripada API')}</p><details class="prep compact"><summary>Lihat respons ringkas</summary><small>${escapeText(JSON.stringify(row).slice(0, 170))}${JSON.stringify(row).length > 170 ? '…' : ''}</small></details></article>`).join('') : `<div class="truth-note"><b>Belum ada data dipaparkan</b><span>Tekan butang untuk menguji API OpenDOSM menggunakan dataset contoh cpi_core, atau buka dokumentasi rasmi.</span></div>`;
+    return `<section class="card"><p class="eyebrow">OpenDOSM</p><h2>Konteks rasmi, bukan penilaian keluarga.</h2><div class="truth-row"><span><b>Status</b>${statusText}</span><span><b>Kemas kini</b>${state.dosmUpdatedAt || 'Belum dicuba'}</span></div><div class="source-list">${rows}</div>${state.dosmError ? `<div class="notice"><b>API tidak dapat dicapai:</b> ${escapeText(state.dosmError)}.</div>` : ''}<div class="button-row"><button class="button full" data-action="load-opendosm">Uji OpenDOSM</button><a class="button-secondary full" href="https://developer.data.gov.my/static-api/opendosm" target="_blank" rel="noopener noreferrer">Buka dokumentasi</a></div><details class="prep"><summary>Dataset dicadangkan</summary><ul>${opendosmDatasets.map(item => `<li><b>${item.label}</b> — ${item.purpose}</li>`).join('')}</ul></details></section>`;
   }
 
   function resourceRegistryPanel() {
@@ -574,7 +575,7 @@
         state.dosmError = '';
         render();
         try {
-          const response = await fetch('https://api.data.gov.my/opendosm?id=cpi_state&limit=3', { headers: { accept: 'application/json' } });
+          const response = await fetch('https://api.data.gov.my/opendosm?id=cpi_core&limit=3', { headers: { accept: 'application/json' } });
           if (!response.ok) throw new Error(`HTTP ${response.status}`);
           const data = await response.json();
           state.dosmRows = Array.isArray(data) ? data : (Array.isArray(data.data) ? data.data : []);
