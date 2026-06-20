@@ -1,6 +1,6 @@
-# NewTenangKITA v0.6 — Practical Malaysia Service Layer
+# NewTenangKITA v0.7 — Practical Malaysia Service Layer
 
-## v0.6 enhancements
+## v0.7 enhancements
 
 - Expanded assistance catalogue beyond SARA, STR and BUDI95 into education, housing, work, health, OKU, caregiver, state and sector readiness
 - Added category, source owner, preparation checklist and human-support note to each assistance card
