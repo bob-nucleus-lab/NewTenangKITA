@@ -1,8 +1,8 @@
 (() => {
   'use strict';
 
-  const LOCAL_KEY = 'newtk-v05-preferences';
-  const SESSION_KEY = 'newtk-v05-session';
+  const LOCAL_KEY = 'newtk-v06-preferences';
+  const SESSION_KEY = 'newtk-v06-session';
   const SESSION_MS = 15 * 60 * 1000;
   const defaults = {
     route: 'welcome',
@@ -108,15 +108,31 @@
   const priceSamples = ['Beras putih tempatan', 'Telur ayam', 'Minyak masak'];
 
   const benefitCatalog = [
-    { name: 'Sumbangan Asas Rahmah (SARA)', need: 'living', summary: 'Kredit barangan asas untuk penerima yang disahkan melalui saluran rasmi.', prep: ['MyKad', 'Telefon untuk menerima maklumat', 'Senarai barang asas yang diperlukan'], url: 'https://sara.gov.my/' },
-    { name: 'Sumbangan Tunai Rahmah (STR)', need: 'living', summary: 'Semakan permohonan dan bayaran bantuan tunai melalui HASiL.', prep: ['MyKad', 'Maklumat pasangan dan tanggungan, jika berkaitan', 'Maklumat akaun bank, jika diminta'], url: 'https://bantuantunai.hasil.gov.my/' },
-    { name: 'BUDI95', need: 'transport', summary: 'Maklumat rasmi berkaitan subsidi dan penggunaan bahan api.', prep: ['MyKad', 'Maklumat kenderaan, jika diminta', 'Aplikasi MyDigital ID untuk semakan peribadi'], url: 'https://www.budi95.gov.my/' },
-    { name: 'Bantuan pendidikan', need: 'education', summary: 'Pintu masuk rasmi untuk program pendidikan yang mungkin berkaitan.', prep: ['MyKad penjaga dan anak', 'Surat atau bukti pendaftaran institusi', 'Maklumat pendapatan jika program memerlukannya'], url: needsData.education.link },
-    { name: 'Bantuan perumahan', need: 'housing', summary: 'Pintu masuk rasmi untuk program rumah dan tempat tinggal.', prep: ['MyKad pemohon', 'Maklumat isi rumah', 'Bukti pendapatan atau tempat tinggal jika diminta'], url: needsData.housing.link },
-    { name: 'Bantuan pekerjaan', need: 'work', summary: 'Program pekerjaan, latihan dan perlindungan pendapatan.', prep: ['MyKad', 'Maklumat pekerjaan terkini', 'Resume ringkas jika ada'], url: needsData.work.link },
-    { name: 'Perkhidmatan kesihatan', need: 'health', summary: 'Maklumat perkhidmatan dan saluran kesihatan kerajaan.', prep: ['MyKad atau dokumen pengenalan', 'Surat rujukan jika ada', 'Senarai ubat atau rekod berkaitan jika ada'], url: needsData.health.link },
-    { name: 'Sokongan OKU / JKM', need: 'oku', summary: 'Panduan awal untuk semakan bantuan, pendaftaran atau kemas kini OKU melalui saluran rasmi.', prep: ['MyKad pemohon', 'Maklumat kad atau pendaftaran OKU jika ada', 'Dokumen perubatan atau sokongan jika diminta', 'Maklumat penjaga jika berkaitan'], url: 'https://www.malaysia.gov.my/' },
-    { name: 'Bantuan penjaga', need: 'oku', summary: 'Panduan untuk keluarga atau penjaga yang membantu rakyat OKU, warga emas atau ahli keluarga yang memerlukan sokongan.', prep: ['MyKad pemohon dan individu dibantu', 'Hubungan dengan individu tersebut', 'Dokumen sokongan jika diminta agensi'], url: 'https://www.malaysia.gov.my/' }
+    { name: 'Sumbangan Asas Rahmah (SARA)', need: 'living', category: 'Persekutuan', owner: 'MOF / MyKasih', summary: 'Kredit barangan asas untuk penerima yang disahkan melalui saluran rasmi.', prep: ['MyKad', 'Telefon untuk menerima maklumat', 'Senarai barang asas yang diperlukan', 'Semak kedai dan barangan yang dibenarkan'], help: 'Semak portal rasmi atau dapatkan bantuan di kaunter berkaitan jika tidak dapat menggunakan aplikasi.', url: 'https://sara.gov.my/' },
+    { name: 'Sumbangan Tunai Rahmah (STR)', need: 'living', category: 'Persekutuan', owner: 'HASiL', summary: 'Semakan permohonan dan bayaran bantuan tunai melalui HASiL.', prep: ['MyKad', 'Maklumat pasangan dan tanggungan, jika berkaitan', 'Maklumat akaun bank, jika diminta', 'Semak status permohonan dan rayuan melalui saluran rasmi'], help: 'Keputusan, bayaran dan rayuan hanya disahkan oleh HASiL.', url: 'https://bantuantunai.hasil.gov.my/' },
+    { name: 'BUDI95', need: 'transport', category: 'Subsidi', owner: 'MOF / sistem BUDI95', summary: 'Maklumat rasmi berkaitan subsidi dan penggunaan bahan api.', prep: ['MyKad', 'Maklumat kenderaan, jika diminta', 'Aplikasi MyDigital ID untuk semakan peribadi', 'Jangan rancang untuk menghabiskan kuota subsidi'], help: 'Gunakan untuk merancang perjalanan secara berhemah, bukan untuk menggalakkan penggunaan berlebihan.', url: 'https://www.budi95.gov.my/' },
+    { name: 'Jualan Rahmah', need: 'living', category: 'Kos sara hidup', owner: 'KPDN', summary: 'Semakan lokasi dan jadual jualan berhemah yang diumumkan melalui saluran rasmi.', prep: ['Negeri atau daerah', 'Masa operasi yang tertera', 'Senarai barangan yang mahu dibeli'], help: 'Jadual boleh berubah. Semak sebelum bergerak.', url: 'https://pjrm.kpdn.gov.my/' },
+    { name: 'Bantuan pendidikan', need: 'education', category: 'Keluarga', owner: 'Agensi pendidikan berkaitan', summary: 'Pintu masuk rasmi untuk program pendidikan yang mungkin berkaitan.', prep: ['MyKad penjaga dan anak', 'Surat atau bukti pendaftaran institusi', 'Maklumat pendapatan jika program memerlukannya', 'Tarikh tutup permohonan'], help: 'Program boleh berbeza mengikut negeri, peringkat pendidikan dan institusi.', url: needsData.education.link },
+    { name: 'Bantuan perumahan', need: 'housing', category: 'Tempat tinggal', owner: 'Agensi perumahan persekutuan/negeri', summary: 'Pintu masuk rasmi untuk program rumah dan tempat tinggal.', prep: ['MyKad pemohon', 'Maklumat isi rumah', 'Bukti pendapatan atau tempat tinggal jika diminta', 'Alamat atau kawasan pilihan jika program memerlukan'], help: 'Semak syarat negeri dan saluran kaunter jika sukar memohon secara digital.', url: needsData.housing.link },
+    { name: 'Bantuan pekerjaan', need: 'work', category: 'Kerja', owner: 'Agensi pekerjaan/latihan berkaitan', summary: 'Program pekerjaan, latihan dan perlindungan pendapatan.', prep: ['MyKad', 'Maklumat pekerjaan terkini', 'Resume ringkas jika ada', 'Kemahiran atau latihan yang diminati'], help: 'TenangKITA hanya membantu persediaan; padanan dan kelulusan oleh agensi berkaitan.', url: needsData.work.link },
+    { name: 'Perkhidmatan kesihatan', need: 'health', category: 'Kesihatan', owner: 'Agensi kesihatan berkaitan', summary: 'Maklumat perkhidmatan dan saluran kesihatan kerajaan.', prep: ['MyKad atau dokumen pengenalan', 'Surat rujukan jika ada', 'Senarai ubat atau rekod berkaitan jika ada', 'Keperluan akses seperti kerusi roda atau jurubahasa jika berkaitan'], help: 'Untuk kecemasan kesihatan, jangan tunggu aplikasi.', url: needsData.health.link },
+    { name: 'Sokongan OKU / JKM', need: 'oku', category: 'OKU', owner: 'JKM / agensi kebajikan', summary: 'Panduan awal untuk semakan bantuan, pendaftaran atau kemas kini OKU melalui saluran rasmi.', prep: ['MyKad pemohon', 'Maklumat kad atau pendaftaran OKU jika ada', 'Dokumen perubatan atau sokongan jika diminta', 'Maklumat penjaga jika berkaitan'], help: 'Anda tidak perlu mendedahkan OKU untuk menggunakan maklumat umum TenangKITA.', url: 'https://www.malaysia.gov.my/' },
+    { name: 'Bantuan penjaga', need: 'oku', category: 'Penjaga', owner: 'JKM / agensi kebajikan', summary: 'Panduan untuk keluarga atau penjaga yang membantu rakyat OKU, warga emas atau ahli keluarga yang memerlukan sokongan.', prep: ['MyKad pemohon dan individu dibantu', 'Hubungan dengan individu tersebut', 'Dokumen sokongan jika diminta agensi', 'Izin individu yang dibantu jika mampu memberi kebenaran'], help: 'Akses penjaga perlu berasaskan izin dan audit dalam fasa sebenar.', url: 'https://www.malaysia.gov.my/' },
+    { name: 'Program negeri', need: 'living', category: 'Negeri', owner: 'Kerajaan negeri berkaitan', summary: 'Bantuan negeri boleh berbeza mengikut lokasi, umur, anak, pendapatan, OKU atau keadaan keluarga.', prep: ['Negeri tempat tinggal', 'MyKad', 'Dokumen sokongan mengikut program', 'Semak portal negeri yang rasmi'], help: 'TenangKITA tidak akan meneka kelayakan negeri tanpa sumber yang disahkan.', url: 'https://www.malaysia.gov.my/' }
+  ];
+
+  const servicePrinciples = [
+    ['Empati', 'Tidak melabel rakyat sebagai miskin, gagal atau berisiko.'],
+    ['Kebenaran', 'Bezakan rasmi, anggaran, demo dan sumber yang belum disambungkan.'],
+    ['Tindakan praktikal', 'Setiap kad perlu ada langkah, dokumen dan saluran rasmi atau manusia.'],
+    ['Akses inklusif', 'Paparan mudah, teks besar, kontras, bacaan suara, OKU dan penjaga.']
+  ];
+
+  const stateProgrammeNotes = [
+    'Program negeri perlu disahkan melalui portal rasmi negeri atau agensi pemilik.',
+    'Jangan salin syarat lama tanpa tarikh semakan.',
+    'Jika tiada API, paparkan pautan rasmi dan checklist sahaja.',
+    'Setiap program perlu ada tarikh semakan, pemilik data dan saluran pembetulan.'
   ];
 
   function persist() {
@@ -148,7 +164,7 @@
   }
 
   function phase() {
-    return `<div class="phase"><b>PROTOTAIP v0.5</b> Nilai demo dan anggaran bukan rekod rasmi. <a href="#" data-action="about-demo">Ketahui batas prototaip</a></div>`;
+    return `<div class="phase"><b>PROTOTAIP v0.6</b> Nilai demo dan anggaran bukan rekod rasmi. <a href="#" data-action="about-demo">Ketahui batas prototaip</a></div>`;
   }
 
   function top() {
@@ -238,7 +254,11 @@
   function benefitDiscovery() {
     const mapped = { groceries: 'living', fuel: 'transport', bills: 'housing', children: 'education', income: 'work' }[state.concern];
     const ordered = [...benefitCatalog].sort((a, b) => Number(b.need === mapped) - Number(a.need === mapped));
-    return `<section class="card"><p class="eyebrow">Teroka tanpa log masuk</p><h2>Bantuan yang mungkin berkaitan</h2><p>Senarai ini membantu anda bersedia. Agensi berkenaan menentukan kelayakan.</p><div class="catalog">${ordered.map(item => `<article class="catalog-item"><div><span class="tag official">Pautan rasmi</span>${item.need === mapped ? '<span class="tag relevant">Berkaitan pilihan anda</span>' : ''}<h3>${item.name}</h3><p>${item.summary}</p></div><details class="prep"><summary>Sebelum membuka portal</summary><p>Sediakan jika berkaitan:</p><ul>${item.prep.map(entry => `<li>${entry}</li>`).join('')}</ul><small>Dokumen sebenar bergantung pada syarat program semasa.</small></details><div class="truth-row"><span><b>Jenis</b>Panduan TenangKITA</span><span><b>Keputusan</b>Oleh agensi</span></div><a class="button-secondary" href="${item.url}" target="_blank" rel="noopener noreferrer">Buka portal rasmi</a></article>`).join('')}</div></section>`;
+    return `<section class="card"><p class="eyebrow">Teroka tanpa log masuk</p><h2>Katalog bantuan Malaysia</h2><p>Senarai ini membantu anda bersedia. Ia tidak mengesahkan kelayakan atau bayaran.</p><div class="service-principles">${servicePrinciples.map(([title, text]) => `<article><b>${title}</b><small>${text}</small></article>`).join('')}</div><div class="catalog">${ordered.map((item, idx) => `<article class="catalog-item"><div><span class="tag official">Pautan rasmi</span><span class="tag">${item.category}</span>${item.need === mapped ? '<span class="tag relevant">Berkaitan pilihan anda</span>' : ''}<h3>${item.name}</h3><p>${item.summary}</p></div><details class="prep" ${idx < 2 ? 'open' : ''}><summary>Sebelum membuka portal</summary><p>Sediakan jika berkaitan:</p><ul>${item.prep.map(entry => `<li>${entry}</li>`).join('')}</ul><small>${item.help}</small></details><div class="truth-row"><span><b>Pemilik</b>${item.owner}</span><span><b>Keputusan</b>Oleh agensi</span></div><div class="inline-actions"><a class="button-secondary" href="${item.url}" target="_blank" rel="noopener noreferrer">Buka portal rasmi</a><button class="text-button" data-print-checklist="${idx}">Cetak / simpan checklist</button></div></article>`).join('')}</div></section>${stateProgrammeLayer()}`;
+  }
+
+  function stateProgrammeLayer() {
+    return `<section class="card secondary-card"><p class="eyebrow">Program negeri & sektor</p><h2>Jangan reka syarat. Semak sumber rasmi.</h2><p>Program bantuan boleh berubah mengikut negeri, agensi dan tahun. NewTenangKITA v0.6 hanya menyediakan checklist dan pautan selamat sehingga sumber disahkan.</p><div class="action-list">${stateProgrammeNotes.map((note, index) => `<article class="action"><span class="action-icon">${index + 1}</span><div><b>${index === 0 ? 'Sahkan pemilik sumber' : index === 1 ? 'Semak tarikh' : index === 2 ? 'Gunakan pautan rasmi' : 'Sediakan pembetulan'}</b><small>${note}</small></div></article>`).join('')}</div><div class="truth-note"><b>Status: readiness</b><span>Direka untuk diisi dengan registry rasmi, bukan crawler bebas tanpa kawalan.</span></div></section>`;
   }
 
   function publicBenefits() {
@@ -325,7 +345,18 @@
   }
 
   function dataTrust() {
-    return shell(`${backBar()}<section class="card"><p class="eyebrow">Amanah Data</p><h1>Apa yang diketahui, dan apa yang belum diketahui.</h1><p>TenangKITA hanya menggunakan data untuk memberi panduan. Ia tidak menentukan kelayakan, status ekonomi atau keputusan rasmi.</p><div class="action-list"><article class="action"><span class="action-icon">✓</span><div><b>Apa yang boleh digunakan</b><small>Data terbuka rasmi seperti OpenDOSM untuk konteks negara dan negeri.</small></div></article><article class="action"><span class="action-icon">?</span><div><b>Apa yang belum diketahui</b><small>Profil sebenar keluarga, baki bantuan dan status permohonan tanpa kebenaran anda.</small></div></article><article class="action"><span class="action-icon">!</span><div><b>Apa yang perlu disemak rasmi</b><small>Kelayakan, bayaran, baki, kuota dan keputusan akhir oleh agensi.</small></div></article></div></section>${opendosmPanel()}${resourceRegistryPanel()}${paduReadinessPanel()}<section class="card"><h2>Prinsip prototaip</h2><ul class="plain-list"><li>Tidak mengisytiharkan kelayakan bantuan.</li><li>Tidak mereka baki, lokasi acara atau harga sebagai data semasa.</li><li>Membuka portal rasmi untuk pengesahan akhir.</li><li>Mengutamakan tindakan mudah tanpa memalukan pengguna.</li></ul></section>`, false);
+    return shell(`${backBar()}<section class="card"><p class="eyebrow">Amanah Data</p><h1>Apa yang diketahui, dan apa yang belum diketahui.</h1><p>TenangKITA hanya menggunakan data untuk memberi panduan. Ia tidak menentukan kelayakan, status ekonomi atau keputusan rasmi.</p><div class="action-list"><article class="action"><span class="action-icon">✓</span><div><b>Apa yang boleh digunakan</b><small>Data terbuka rasmi seperti OpenDOSM untuk konteks negara dan negeri.</small></div></article><article class="action"><span class="action-icon">?</span><div><b>Apa yang belum diketahui</b><small>Profil sebenar keluarga, baki bantuan dan status permohonan tanpa kebenaran anda.</small></div></article><article class="action"><span class="action-icon">!</span><div><b>Apa yang perlu disemak rasmi</b><small>Kelayakan, bayaran, baki, kuota dan keputusan akhir oleh agensi.</small></div></article></div></section>${eaServiceLayer()}${opendosmPanel()}${resourceRegistryPanel()}${paduReadinessPanel()}<section class="card"><h2>Prinsip prototaip</h2><ul class="plain-list"><li>Tidak mengisytiharkan kelayakan bantuan.</li><li>Tidak mereka baki, lokasi acara atau harga sebagai data semasa.</li><li>Membuka portal rasmi untuk pengesahan akhir.</li><li>Mengutamakan tindakan mudah tanpa memalukan pengguna.</li><li>Memastikan OKU, penjaga dan pengguna rendah literasi tidak tertinggal.</li></ul></section>`, false);
+  }
+
+  function eaServiceLayer() {
+    const layers = [
+      ['Pengalaman rakyat', 'Keutamaan, paparan mudah, tindakan kecil, bantuan manusia.'],
+      ['Akses inklusif', 'OKU, warga emas, penjaga, teks besar, kontras dan bacaan suara.'],
+      ['Amanah & kebenaran', 'MyDigital ID, persetujuan sumber dan penarikan balik kebenaran.'],
+      ['Perkhidmatan Malaysia', 'Katalog bantuan, checklist, portal rasmi dan alternatif kaunter.'],
+      ['Data rasmi', 'OpenDOSM, PriceCatcher adapter, PADU masa hadapan dan sumber agensi.']
+    ];
+    return `<section class="card secondary-card"><p class="eyebrow">EA dalam aplikasi</p><h2>Setiap fungsi mesti ada lapisan amanah.</h2><div class="source-list">${layers.map(([title, text]) => `<article class="source-card"><h3>${title}</h3><p>${text}</p></article>`).join('')}</div></section>`;
   }
 
   function opendosmPanel() {
@@ -378,7 +409,7 @@
   }
 
   function about() {
-    alert('NewTenangKITA v0.5 ialah prototaip inklusif dengan lapisan sumber rasmi. MyDigital ID, data manfaat dan sokongan OKU adalah simulasi atau pautan panduan. Harga sebenar tidak dipaparkan; kalkulator menghasilkan anggaran pada peranti. Tiada kelayakan, baki atau transaksi sebenar diproses.');
+    alert('NewTenangKITA v0.6 ialah prototaip inklusif dengan lapisan perkhidmatan Malaysia yang praktikal. MyDigital ID, data manfaat dan sokongan OKU adalah simulasi atau pautan panduan. Harga sebenar tidak dipaparkan; kalkulator menghasilkan anggaran pada peranti. Tiada kelayakan, baki atau transaksi sebenar diproses.');
   }
 
   function navigate(route, tab = state.tab, replace = false) {
@@ -582,6 +613,22 @@
     });
     document.querySelectorAll('[data-disconnect]').forEach(element => {
       element.onclick = () => { state.consents = state.consents.filter(id => id !== element.dataset.disconnect); render(); };
+    });
+    document.querySelectorAll('[data-print-checklist]').forEach(element => {
+      element.onclick = () => {
+        const item = benefitCatalog[Number(element.dataset.printChecklist)];
+        if (!item) return;
+        const checklist = item.prep.map(entry => `- ${entry}`).join('\n');
+        const text = `${item.name}\n\nApa ini:\n${item.summary}\n\nSediakan jika berkaitan:\n${checklist}\n\nNota TenangKITA:\n${item.help}\n\nKeputusan rasmi: ${item.owner}\nPortal: ${item.url}`;
+        const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `checklist-${item.name.toLowerCase().replace(/[^a-z0-9]+/gi, '-')}.txt`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(link.href), 500);
+      };
     });
     const returnBenefits = document.querySelector('[data-action="return-benefits"]');
     if (returnBenefits) returnBenefits.onclick = () => navigate('main', 'benefits');

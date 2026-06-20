@@ -1,7 +1,7 @@
 {
-  "name": "NewTenangKITA v0.5",
+  "name": "NewTenangKITA v0.6",
   "short_name": "TenangKITA",
-  "description": "Prototaip bantuan harian yang empatik untuk rakyat Malaysia.",
+  "description": "Lapisan perkhidmatan Malaysia yang empatik, benar dan praktikal untuk rakyat.",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#fafafa",
