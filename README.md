@@ -1,10 +1,13 @@
-# NewTenangKITA v0.7.1
+# NewTenangKITA v0.7.2
 
-UX clean-up release for the GitHub-only prototype. This version keeps the NewTenangKITA elements while reducing visible governance text and improving the citizen flow.
+Citizen screen simplification release for the GitHub-only prototype. This version keeps the NewTenangKITA elements while reducing visible text on main citizen screens.
+
+## Product compass
+
+NewTenangKITA is a trusted, empathetic and practical citizen support layer for Malaysians — including OKU, elderly citizens, caregivers and low digital-literacy users — that helps people understand official information and take one useful action at a time.
 
 ## What stays
 
-- Empathy-first, citizen-centric flow
 - Guest access with no assumed profile
 - OKU-friendly Akses tab
 - Paparan Mudah, larger text, high contrast and read-aloud
@@ -16,15 +19,14 @@ UX clean-up release for the GitHub-only prototype. This version keeps the NewTen
 - No citizen scoring, no fabricated prices and no false eligibility
 - No database, no backend and no personal citizen data
 
-## v0.7.1 UX clean-up
+## v0.7.2 UX simplification
 
-- Shorter prototype status banner
-- Moved long governance explanations into secondary screens
-- Simplified welcome, guest and access screens
-- Made guest actions tappable
-- Collapsed registry, EA and prototype boundary details using progressive disclosure
-- Shortened MyDigital ID explanation while keeping the correct boundary
-- Added dedicated Status Prototaip screen under Saya & privasi
+- Shortened Welcome and Home screens
+- Moved profile/status details behind expandable sections
+- Shortened MyDigital ID and consent screens
+- Reduced repeated trust explanations
+- Made Akses screen more direct
+- Kept full governance details inside Amanah Data and Status Prototaip
 
 ## Run locally
 
