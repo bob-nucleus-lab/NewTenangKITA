@@ -1,4 +1,4 @@
-const RECOVERY_CACHE = 'new-tenangkita-v0.8.1-recovery';
+const RECOVERY_CACHE = 'new-tenangkita-v0.8.2-recovery';
 self.addEventListener('install', event => {
   event.waitUntil(self.skipWaiting());
 });

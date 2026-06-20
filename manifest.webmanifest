@@ -1,7 +1,7 @@
 {
-  "name": "NewTenangKITA v0.8.1",
+  "name": "TenangKITA",
   "short_name": "TenangKITA",
-  "description": "Lapisan perkhidmatan Malaysia yang empatik, benar dan praktikal untuk rakyat.",
+  "description": "Prototaip NewTenangKITA v0.8.2 — lapisan perkhidmatan Malaysia yang empatik, benar dan praktikal untuk rakyat.",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#fafafa",

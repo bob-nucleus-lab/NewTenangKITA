@@ -7,8 +7,8 @@
       }
     } catch (_) {}
     const target = new URL('./index.html', location.href);
-    target.searchParams.set('v', '0.8.1-hotfix');
-    if (!location.search.includes('0.8.1-hotfix')) location.replace(target.toString());
+    target.searchParams.set('v', '0.8.2');
+    if (!location.search.includes('0.8.2')) location.replace(target.toString());
   };
   recover();
 })();

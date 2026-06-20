@@ -1,8 +1,8 @@
 (() => {
   'use strict';
 
-  const LOCAL_KEY = 'newtk-v081-preferences';
-  const SESSION_KEY = 'newtk-v081-session';
+  const LOCAL_KEY = 'newtk-v082-preferences';
+  const SESSION_KEY = 'newtk-v082-session';
   const SESSION_MS = 15 * 60 * 1000;
   const defaults = {
     route: 'welcome',
@@ -20,6 +20,7 @@
     accessNeeds: [],
     caregiverMode: false,
     highContrast: false,
+    bigButtons: false,
     dosmStatus: 'idle',
     dosmRows: [],
     dosmUpdatedAt: '',
@@ -58,17 +59,17 @@
   const sources = {
     sara: {
       name: 'SARA / MyKasih',
-      scope: 'Baki, masa kemas kini dan transaksi ringkas',
+      scope: 'Baki/status rasmi melalui saluran MyKasih atau integrasi dibenarkan',
       url: 'https://sara.gov.my/'
     },
     budi: {
       name: 'BUDI95',
-      scope: 'Status dan penggunaan subsidi bahan api',
+      scope: 'Status/penggunaan rasmi melalui sistem BUDI95 atau integrasi dibenarkan',
       url: 'https://www.budi95.gov.my/'
     },
     str: {
       name: 'STR / HASiL',
-      scope: 'Status permohonan dan bayaran',
+      scope: 'Status permohonan dan bayaran melalui HASiL',
       url: 'https://bantuantunai.hasil.gov.my/'
     },
     padu: {
@@ -150,7 +151,8 @@
       simpleMode: state.simpleMode,
       accessNeeds: state.accessNeeds,
       caregiverMode: state.caregiverMode,
-      highContrast: state.highContrast
+      highContrast: state.highContrast,
+      bigButtons: state.bigButtons
     }));
     if (state.verified) {
       sessionStorage.setItem(SESSION_KEY, JSON.stringify({
@@ -164,6 +166,7 @@
     document.documentElement.classList.toggle('large-text', state.largeText);
     document.documentElement.classList.toggle('simple-mode', state.simpleMode);
     document.documentElement.classList.toggle('high-contrast', state.highContrast);
+    document.documentElement.classList.toggle('big-buttons', state.bigButtons);
   }
 
   function phase() {
@@ -231,12 +234,12 @@
     const common = ['Semak bantuan berkaitan', 'Lihat program yang mungkin berkaitan. Kelayakan ditentukan oleh agensi.', 'benefits'];
     const maps = {
       groceries: [
-        hasSara ? ['Rancang menggunakan baki SARA demo', 'Semak baki dan barangan layak sebelum menggunakan tunai.', 'benefits'] : ['Semak sama ada SARA berkaitan', 'Gunakan portal rasmi untuk melihat status dan baki.', 'benefits'],
+        hasSara ? ['Semak sambungan SARA', 'Baki sebenar hanya boleh dilihat melalui sambungan rasmi.', 'benefits'] : ['Semak sama ada SARA berkaitan', 'Gunakan portal rasmi untuk melihat status dan baki.', 'benefits'],
         ['Bandingkan sebelum bergerak', 'Semak harga dan jadual Jualan Rahmah melalui sumber terkini.', 'living'],
         common
       ],
       fuel: [
-        hasBudi ? ['Semak penggunaan BUDI95 demo', 'Lihat simulasi penggunaan sebelum merancang perjalanan.', 'benefits'] : ['Semak status BUDI95', 'Gunakan portal rasmi sebelum membuat anggaran.', 'benefits'],
+        hasBudi ? ['Semak sambungan BUDI95', 'Penggunaan sebenar hanya disahkan oleh sistem rasmi.', 'benefits'] : ['Semak status BUDI95', 'Gunakan portal rasmi sebelum membuat anggaran.', 'benefits'],
         ['Kira kos perjalanan', 'Gunakan jarak dan harga yang anda sendiri masukkan.', 'transport'],
         common
       ],
@@ -272,11 +275,11 @@
     const source = sources[id];
     const connected = state.consents.includes(id);
     const demo = {
-      sara: ['Baki demo', 'RM84.50', 'Contoh paparan; tiada tarikh rasmi'],
-      budi: ['Penggunaan demo', '42 L bulan ini', 'Had dan kaedah sebenar tertakluk sumber rasmi'],
-      str: ['Status demo', 'Bayaran dikreditkan', 'Tarikh dan jumlah sebenar melalui HASiL']
+      sara: ['Baki SARA', 'Sambungan rasmi diperlukan', 'Prototaip tidak menerima baki sebenar.'],
+      budi: ['Penggunaan BUDI95', 'Sambungan rasmi diperlukan', 'Prototaip tidak menerima rekod penggunaan sebenar.'],
+      str: ['Status STR', 'Semak melalui HASiL', 'Prototaip tidak menerima status bayaran sebenar.']
     }[id];
-    return `<article class="benefit"><div class="benefit-head"><div><h3>${source.name}</h3><span class="tag ${connected ? 'connected' : ''}">${connected ? 'Kebenaran aktif' : 'Belum dibenarkan'}</span></div><span class="tag demo">Data demo</span></div>${connected ? `<div class="benefit-data"><small>${demo[0]}</small><strong>${demo[1]}</strong><small>${demo[2]}</small></div>` : `<p>${source.scope}</p>`}<div class="truth-row"><span><b>Sumber</b>${source.name}</span><span><b>Jenis</b>${connected ? 'Simulasi' : 'Belum disambung'}</span></div><div class="inline-actions">${connected ? `<button class="text-button" data-disconnect="${id}">Tarik balik kebenaran</button>` : `<button class="button-secondary" data-request-consent="${id}">Lihat maklumat yang diperlukan</button>`}<a class="link button-secondary" href="${source.url}" target="_blank" rel="noopener noreferrer">Semak rasmi</a></div></article>`;
+    return `<article class="benefit"><div class="benefit-head"><div><h3>${source.name}</h3><span class="tag ${connected ? 'connected' : ''}">${connected ? 'Kebenaran demo aktif' : 'Belum dibenarkan'}</span></div><span class="tag demo">Simulasi</span></div>${connected ? `<div class="benefit-data"><small>${demo[0]}</small><strong>${demo[1]}</strong><small>${demo[2]}</small></div>` : `<p>${source.scope}</p>`}<div class="truth-row"><span><b>Sumber</b>${source.name}</span><span><b>Jenis</b>${connected ? 'Simulasi tanpa nilai sebenar' : 'Belum disambung'}</span></div><div class="inline-actions">${connected ? `<button class="text-button" data-disconnect="${id}">Tarik balik kebenaran</button>` : `<button class="button-secondary" data-request-consent="${id}">Lihat maklumat yang diperlukan</button>`}<a class="link button-secondary" href="${source.url}" target="_blank" rel="noopener noreferrer">Semak rasmi</a></div></article>`;
   }
 
   function needs() {
@@ -299,7 +302,7 @@
 
   function livingCostModule() {
     const place = state.state || 'lokasi anda';
-    return `<section class="card"><p class="eyebrow">Kos sara hidup</p><h2>Semak harga barang asas</h2><div class="demo-banner">HARGA BELUM DISAMBUNGKAN — tiada harga semasa dipaparkan.</div><p>Barang yang boleh dibandingkan untuk ${place}:</p><div class="price-grid">${priceSamples.map(item => `<article class="price-card"><span>${item}</span><strong>—</strong><small>Semak melalui PriceCatcher</small></article>`).join('')}</div><div class="truth-row"><span><b>Sumber sebenar</b>PriceCatcher KPDN</span><span><b>Dikemas kini</b>Semasa portal dibuka</span></div><a class="button full" href="https://pricecatcher.kpdn.gov.my/" target="_blank" rel="noopener noreferrer">Semak harga sebenar</a></section><section class="card"><p class="eyebrow">Jualan Rahmah</p><h2>Cari jualan berhampiran</h2><p>Jadual boleh berubah. Semak lokasi dan masa terus melalui saluran KPDN.</p><a class="button full" href="https://pjrm.kpdn.gov.my/" target="_blank" rel="noopener noreferrer">Buka jadual rasmi</a><div class="truth-note"><b>Status: belum disambungkan</b><span>Tiada acara atau jarak rekaan dipaparkan.</span></div></section>`;
+    return `<section class="card"><p class="eyebrow">Kos sara hidup</p><h2>Semak harga barang asas</h2><div class="demo-banner">HARGA BELUM DISAMBUNGKAN — tiada harga semasa dipaparkan.</div><p>Barang yang boleh dibandingkan untuk ${place}:</p><div class="price-grid">${priceSamples.map(item => `<article class="price-card"><span>${item}</span><strong>—</strong><small>Semak melalui PriceCatcher</small></article>`).join('')}</div><div class="truth-row"><span><b>Sumber sebenar</b>PriceCatcher KPDN</span><span><b>Kemas kini</b>Rujuk portal rasmi</span></div><a class="button full" href="https://pricecatcher.kpdn.gov.my/" target="_blank" rel="noopener noreferrer">Semak harga sebenar</a></section><section class="card"><p class="eyebrow">Jualan Rahmah</p><h2>Cari jualan berhampiran</h2><p>Jadual boleh berubah. Semak lokasi dan masa terus melalui saluran KPDN.</p><a class="button full" href="https://pjrm.kpdn.gov.my/" target="_blank" rel="noopener noreferrer">Buka jadual rasmi</a><div class="truth-note"><b>Status: belum disambungkan</b><span>Tiada acara, jarak atau harga rekaan dipaparkan.</span></div></section>`;
   }
 
   function travelModule() {
@@ -316,7 +319,7 @@
       ['largeText','Teks besar','Bacaan lebih jelas'],
       ['highContrast','Kontras tinggi','Warna lebih jelas'],
       ['simpleMode','Paparan mudah','Kurangkan teks'],
-      ['screenReader','Pembaca skrin','Label lebih tersusun'],
+      ['screenReader','Saya guna pembaca skrin','Label dan struktur disokong'],
       ['bigButtons','Butang besar','Lebih mudah disentuh'],
       ['caregiver','Bantu ahli keluarga','Dengan izin mereka']
     ];
@@ -328,6 +331,7 @@
     if (id === 'highContrast') return state.highContrast;
     if (id === 'simpleMode') return state.simpleMode;
     if (id === 'caregiver') return state.caregiverMode;
+    if (id === 'bigButtons') return state.bigButtons;
     return state.accessNeeds.includes(id);
   }
 
@@ -348,7 +352,7 @@
   }
 
   function me() {
-    return `<section class="card"><h1>Saya & privasi</h1><div class="privacy"><b>Status:</b> Prototaip statik. Tiada pangkalan data dan tiada data peribadi rakyat disimpan.</div><div class="setting-row"><div><b>Paparan mudah</b><small>Kurangkan teks dan tunjuk tindakan utama.</small></div><button class="button-secondary" data-action="toggle-simple">${state.simpleMode ? 'Tutup' : 'Aktifkan'}</button></div><div class="setting-row"><div><b>Saiz teks</b><small>Besarkan teks pada peranti kecil.</small></div><button class="button-secondary" data-action="toggle-text">${state.largeText ? 'Tutup' : 'Aktifkan'}</button></div><div class="setting-row"><div><b>Kontras tinggi</b><small>Tambah kejelasan visual.</small></div><button class="button-secondary" data-action="toggle-contrast">${state.highContrast ? 'Tutup' : 'Aktifkan'}</button></div><div class="setting-row"><div><b>Mod penjaga</b><small>${state.caregiverMode ? 'Aktif dengan izin individu dibantu.' : 'Untuk membantu ahli keluarga dengan izin.'}</small></div><button class="button-secondary" data-action="toggle-caregiver">${state.caregiverMode ? 'Tutup' : 'Aktifkan'}</button></div><div class="setting-row"><div><b>Bacakan halaman</b><small>Guna suara pada peranti.</small></div><button class="button-secondary" data-action="read-page">Dengar</button></div><div class="setting-row"><div><b>Keutamaan utama</b><small>${state.concern ? concerns[state.concern].label : 'Belum dipilih'}</small></div><button class="text-button" data-route="concern">Tukar</button></div><div class="setting-row"><div><b>Status identiti</b><small>${state.verified ? 'Pengesahan simulasi aktif' : 'Tetamu'}</small></div><span class="tag ${state.verified ? 'connected' : ''}">${state.verified ? 'Demo aktif' : 'Tetamu'}</span></div>${state.verified ? `<button class="button-secondary full" data-action="logout">Keluar daripada sesi demo</button>` : ''}</section><section class="card secondary-card"><h2>Sumber & ketelusan</h2><p>Semak sumber, batas data dan status prototaip.</p><div class="button-row"><button class="button-secondary full" data-route="data-trust">Amanah Data</button><button class="button-secondary full" data-route="prototype-status">Status prototaip</button></div></section><section class="card secondary-card"><h2>Pusat kebenaran</h2>${Object.entries(sources).filter(([id, source]) => !source.future).map(([id, source]) => `<div class="setting-row"><div><b>${source.name}</b><small>${state.consents.includes(id) ? 'Kebenaran demo aktif' : 'Tidak disambungkan'}</small></div>${state.consents.includes(id) ? `<button class="text-button" data-disconnect="${id}">Tarik balik</button>` : '<span class="tag">Tiada akses</span>'}</div>`).join('')}</section><section class="card secondary-card"><h2>Kawalan data</h2><p>Pilihan umum disimpan pada peranti ini sahaja.</p><button class="button-secondary danger-button full" data-action="reset">Padam data prototaip</button></section>`;
+    return `<section class="card"><h1>Saya & privasi</h1><div class="privacy"><b>Status:</b> Prototaip statik. Tiada pangkalan data dan tiada data peribadi rakyat disimpan.</div><div class="setting-row"><div><b>Paparan mudah</b><small>Kurangkan teks dan tunjuk tindakan utama.</small></div><button class="button-secondary" data-action="toggle-simple">${state.simpleMode ? 'Tutup' : 'Aktifkan'}</button></div><div class="setting-row"><div><b>Saiz teks</b><small>Besarkan teks pada peranti kecil.</small></div><button class="button-secondary" data-action="toggle-text">${state.largeText ? 'Tutup' : 'Aktifkan'}</button></div><div class="setting-row"><div><b>Butang besar</b><small>Besarkan kawasan sentuh untuk tindakan utama.</small></div><button class="button-secondary" data-action="toggle-buttons">${state.bigButtons ? 'Tutup' : 'Aktifkan'}</button></div><div class="setting-row"><div><b>Kontras tinggi</b><small>Tambah kejelasan visual.</small></div><button class="button-secondary" data-action="toggle-contrast">${state.highContrast ? 'Tutup' : 'Aktifkan'}</button></div><div class="setting-row"><div><b>Mod penjaga</b><small>${state.caregiverMode ? 'Aktif dengan izin individu dibantu.' : 'Untuk membantu ahli keluarga dengan izin.'}</small></div><button class="button-secondary" data-action="toggle-caregiver">${state.caregiverMode ? 'Tutup' : 'Aktifkan'}</button></div><div class="setting-row"><div><b>Bacakan halaman</b><small>Guna suara pada peranti.</small></div><button class="button-secondary" data-action="read-page">Dengar</button></div><div class="setting-row"><div><b>Keutamaan utama</b><small>${state.concern ? concerns[state.concern].label : 'Belum dipilih'}</small></div><button class="text-button" data-route="concern">Tukar</button></div><div class="setting-row"><div><b>Status identiti</b><small>${state.verified ? 'Pengesahan simulasi aktif' : 'Tetamu'}</small></div><span class="tag ${state.verified ? 'connected' : ''}">${state.verified ? 'Demo aktif' : 'Tetamu'}</span></div>${state.verified ? `<button class="button-secondary full" data-action="logout">Keluar daripada sesi demo</button>` : ''}</section><section class="card secondary-card"><h2>Sumber & ketelusan</h2><p>Semak sumber, batas data dan status prototaip.</p><div class="button-row"><button class="button-secondary full" data-route="data-trust">Amanah Data</button><button class="button-secondary full" data-route="prototype-status">Status prototaip</button></div></section><section class="card secondary-card"><h2>Pusat kebenaran</h2>${Object.entries(sources).filter(([id, source]) => !source.future).map(([id, source]) => `<div class="setting-row"><div><b>${source.name}</b><small>${state.consents.includes(id) ? 'Kebenaran demo aktif' : 'Tidak disambungkan'}</small></div>${state.consents.includes(id) ? `<button class="text-button" data-disconnect="${id}">Tarik balik</button>` : '<span class="tag">Tiada akses</span>'}</div>`).join('')}</section><section class="card secondary-card"><h2>Kawalan data</h2><p>Pilihan umum disimpan pada peranti ini sahaja.</p><button class="button-secondary danger-button full" data-action="reset">Padam data prototaip</button></section>`;
   }
 
   function trackReminderPanel() {
@@ -398,8 +402,12 @@
       ready: 'Data berjaya dimuatkan',
       error: 'Tidak dapat dimuatkan'
     }[state.dosmStatus] || 'Belum dimuatkan';
-    const rows = state.dosmRows.length ? state.dosmRows.slice(0, 3).map(row => `<article class="source-card"><div><h3>${escapeText(row.dataset || row.id || 'OpenDOSM')}</h3><span class="tag official">Rasmi</span></div><p>${escapeText(row.date || row.period || row.year || 'Rekod diterima daripada API')}</p><details class="prep compact"><summary>Lihat respons ringkas</summary><small>${escapeText(JSON.stringify(row).slice(0, 170))}${JSON.stringify(row).length > 170 ? '…' : ''}</small></details></article>`).join('') : `<div class="truth-note"><b>Belum ada data dipaparkan</b><span>Tekan butang untuk menguji API OpenDOSM menggunakan dataset contoh cpi_core, atau buka dokumentasi rasmi.</span></div>`;
-    return `<section class="card"><p class="eyebrow">OpenDOSM</p><h2>Konteks rasmi, bukan penilaian keluarga.</h2><div class="truth-row"><span><b>Status</b>${statusText}</span><span><b>Kemas kini</b>${state.dosmUpdatedAt || 'Belum dicuba'}</span></div><div class="source-list">${rows}</div>${state.dosmError ? `<div class="notice"><b>API tidak dapat dicapai:</b> ${escapeText(state.dosmError)}.</div>` : ''}<div class="button-row"><button class="button full" data-action="load-opendosm">Uji OpenDOSM</button><a class="button-secondary full" href="https://developer.data.gov.my/static-api/opendosm" target="_blank" rel="noopener noreferrer">Buka dokumentasi</a></div><details class="prep"><summary>Dataset dicadangkan</summary><ul>${opendosmDatasets.map(item => `<li><b>${item.label}</b> — ${item.purpose}</li>`).join('')}</ul></details></section>`;
+    const rows = state.dosmRows.length ? state.dosmRows.slice(0, 3).map(row => {
+      const period = row.date || row.period || row.year || row.month || 'Tempoh tidak dinyatakan dalam paparan ringkas';
+      const raw = JSON.stringify(row);
+      return `<article class="source-card"><div><h3>Rekod OpenDOSM berjaya diterima</h3><span class="tag official">Rasmi</span></div><p>Data ini memberi konteks rasmi, bukan penilaian keluarga anda.</p><div class="truth-row"><span><b>Dataset</b>cpi_core</span><span><b>Tempoh</b>${escapeText(period)}</span></div><details class="prep compact"><summary>Lihat data teknikal</summary><small>${escapeText(raw.slice(0, 170))}${raw.length > 170 ? '…' : ''}</small></details></article>`;
+    }).join('') : `<div class="truth-note"><b>Belum ada data dipaparkan</b><span>Tekan butang untuk menguji API OpenDOSM menggunakan dataset contoh cpi_core, atau buka dokumentasi rasmi.</span></div>`;
+    return `<section class="card"><p class="eyebrow">OpenDOSM</p><h2>Konteks rasmi, bukan penilaian keluarga.</h2><div class="truth-row"><span><b>Status</b>${statusText}</span><span><b>Kemas kini</b>${state.dosmUpdatedAt || 'Belum dicuba'}</span></div><div class="source-list">${rows}</div>${state.dosmError ? `<div class="notice"><b>API tidak dapat dicapai:</b> ${escapeText(state.dosmError)}.</div>` : ''}<div class="truth-note"><b>Apa maksudnya</b><span>OpenDOSM membantu memberi konteks rasmi. Ia tidak menentukan kelayakan, status bantuan atau keadaan keluarga anda.</span></div><div class="button-row"><button class="button full" data-action="load-opendosm">Uji OpenDOSM</button><a class="button-secondary full" href="https://developer.data.gov.my/static-api/opendosm" target="_blank" rel="noopener noreferrer">Buka dokumentasi</a></div><details class="prep"><summary>Dataset dicadangkan</summary><ul>${opendosmDatasets.map(item => `<li><b>${item.label}</b> — ${item.purpose}</li>`).join('')}</ul></details></section>`;
   }
 
   function resourceRegistryPanel() {
@@ -436,7 +444,7 @@
   }
 
   function prototypeStatus() {
-    return shell(`${backBar()}${prototypeBoundaryPanel()}${presentationReadinessPanel()}<section class="card"><h2>Future state</h2><p>Selepas persetujuan prinsip, fasa cloud boleh menambah API gateway, consent, audit log dan integrasi rasmi.</p><div class="truth-note"><b>Sekarang</b><span>GitHub-only, tanpa database dan tanpa data peribadi.</span></div></section>`, false);
+    return shell(`${backBar()}${prototypeBoundaryPanel()}${presentationReadinessPanel()}<section class="card"><p class="eyebrow">NewTenangKITA v0.8.2</p><h2>Future state</h2><p>Selepas persetujuan prinsip, fasa cloud boleh menambah API gateway, consent, audit log dan integrasi rasmi.</p><div class="truth-note"><b>Sekarang</b><span>GitHub-only, tanpa database dan tanpa data peribadi.</span></div></section>`, false);
   }
 
   function main() {
@@ -465,6 +473,10 @@
   }
 
   function render() {
+    document.documentElement.classList.toggle('large-text', state.largeText);
+    document.documentElement.classList.toggle('simple-mode', state.simpleMode);
+    document.documentElement.classList.toggle('high-contrast', state.highContrast);
+    document.documentElement.classList.toggle('big-buttons', state.bigButtons);
     if ('speechSynthesis' in window) speechSynthesis.cancel();
     if (state.verified && Date.now() - state.authAt >= SESSION_MS) clearSession();
     if (!state.verified && state.route === 'consent') {
@@ -539,6 +551,9 @@
     document.querySelectorAll('[data-action="toggle-contrast"]').forEach(element => {
       element.onclick = () => { state.highContrast = !state.highContrast; render(); };
     });
+    document.querySelectorAll('[data-action="toggle-buttons"]').forEach(element => {
+      element.onclick = () => { state.bigButtons = !state.bigButtons; render(); };
+    });
     document.querySelectorAll('[data-action="toggle-caregiver"]').forEach(element => {
       element.onclick = () => { state.caregiverMode = !state.caregiverMode; render(); };
     });
@@ -549,6 +564,7 @@
         else if (id === 'highContrast') state.highContrast = !state.highContrast;
         else if (id === 'simpleMode') state.simpleMode = !state.simpleMode;
         else if (id === 'caregiver') state.caregiverMode = !state.caregiverMode;
+        else if (id === 'bigButtons') state.bigButtons = !state.bigButtons;
         else if (state.accessNeeds.includes(id)) state.accessNeeds = state.accessNeeds.filter(item => item !== id);
         else state.accessNeeds = [...state.accessNeeds, id];
         render();
@@ -692,7 +708,8 @@
 
   document.documentElement.classList.toggle('large-text', state.largeText);
   document.documentElement.classList.toggle('simple-mode', state.simpleMode);
-    document.documentElement.classList.toggle('high-contrast', state.highContrast);
+  document.documentElement.classList.toggle('high-contrast', state.highContrast);
+  document.documentElement.classList.toggle('big-buttons', state.bigButtons);
   history.replaceState({ newtk: true, route: state.route, tab: state.tab }, '', location.href);
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));

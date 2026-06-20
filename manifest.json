@@ -1,7 +1,7 @@
 {
-  "name": "NewTenangKITA v0.8.1 Recovery",
+  "name": "NewTenangKITA v0.8.2 Recovery",
   "short_name": "TenangKITA",
-  "start_url": "./index.html?v=0.8.1-hotfix",
+  "start_url": "./index.html?v=0.8.2",
   "display": "standalone",
   "background_color": "#fafafa",
   "theme_color": "#1d4ed8",
